@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Leitura Livre carregado com sucesso!');
     
+    // Inicializa todas as funcionalidades
     initializeNavigation();
     initializeButtons();
     initializeFilters();
@@ -10,7 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeScrollEffects();
 });
 
+// ========================================
+// SISTEMA DE NAVEGAÇÃO
+// ========================================
 function initializeNavigation() {
+    // Navegação suave para âncoras
     const navLinks = document.querySelectorAll('.nav a[href^="#"]');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -27,7 +32,7 @@ function initializeNavigation() {
         });
     });
 
-
+    // Header transparente no scroll
     window.addEventListener('scroll', function() {
         const header = document.querySelector('.header');
         if (window.scrollY > 100) {
@@ -38,8 +43,12 @@ function initializeNavigation() {
     });
 }
 
+// ========================================
+// SISTEMA DE BOTÕES PRINCIPAIS
+// ========================================
 function initializeButtons() {
     
+    // Botão "Comece a Escrever" (Hero)
     const btnStartWriting = document.querySelector('.hero .btn-cta');
     if (btnStartWriting) {
         btnStartWriting.addEventListener('click', function() {
@@ -50,6 +59,7 @@ function initializeButtons() {
         });
     }
 
+    // Botão "Explore Livros" (Hero)
     const btnExploreBooks = document.querySelector('.hero .btn-outline');
     if (btnExploreBooks) {
         btnExploreBooks.addEventListener('click', function() {
@@ -62,6 +72,7 @@ function initializeButtons() {
         });
     }
 
+    // Botão "Criar Minha Conta" (CTA Section)
     const btnCreateAccount = document.querySelector('.cta-section .btn-cta');
     if (btnCreateAccount) {
         btnCreateAccount.addEventListener('click', function() {
@@ -69,6 +80,7 @@ function initializeButtons() {
         });
     }
 
+    // Botão "Conhecer a Comunidade" (CTA Section)
     const btnKnowCommunity = document.querySelector('.cta-section .btn-outline');
     if (btnKnowCommunity) {
         btnKnowCommunity.addEventListener('click', function() {
@@ -79,6 +91,7 @@ function initializeButtons() {
         });
     }
 
+    // Botão "Ver Todas" (Recent Books)
     const btnSeeAll = document.querySelector('.recent-books .btn-outline');
     if (btnSeeAll) {
         btnSeeAll.addEventListener('click', function() {
@@ -89,7 +102,7 @@ function initializeButtons() {
         });
     }
 
-
+    // Botão "Apoiar" (Header)
     const btnSupport = document.querySelector('.btn-primary');
     if (btnSupport) {
         btnSupport.addEventListener('click', function() {
@@ -97,7 +110,7 @@ function initializeButtons() {
         });
     }
 
- 
+    // Botão de busca (Header)
     const btnSearch = document.querySelector('.btn-icon');
     if (btnSearch) {
         btnSearch.addEventListener('click', function() {
@@ -105,7 +118,7 @@ function initializeButtons() {
         });
     }
 
-
+    // Botão de usuário (Header)
     const btnUser = document.querySelectorAll('.btn-icon')[1];
     if (btnUser) {
         btnUser.addEventListener('click', function() {
@@ -114,20 +127,25 @@ function initializeButtons() {
     }
 }
 
-
+// ========================================
+// SISTEMA DE FILTROS
+// ========================================
 function initializeFilters() {
     const filterButtons = document.querySelectorAll('.btn-filter');
     
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
-
+            // Remove classe active de todos os botões
             filterButtons.forEach(btn => btn.classList.remove('active'));
             
+            // Adiciona classe active ao botão clicado
             this.classList.add('active');
-
+            
+            // Simula carregamento de conteúdo
             const period = this.textContent.toLowerCase();
             showNotification(`📊 Carregando livros populares do ${period}...`, 'info');
             
+            // Simula mudança de conteúdo
             setTimeout(() => {
                 updateBookGrid(period);
             }, 800);
@@ -135,9 +153,11 @@ function initializeFilters() {
     });
 }
 
-
+// ========================================
+// SISTEMA DE CARDS INTERATIVOS
+// ========================================
 function initializeCards() {
-
+    // Cards de livros
     const bookCards = document.querySelectorAll('.book-card');
     bookCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -147,6 +167,7 @@ function initializeCards() {
         });
     });
 
+    // Cards de categorias
     const categoryCards = document.querySelectorAll('.category-card');
     categoryCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -159,6 +180,7 @@ function initializeCards() {
         });
     });
 
+    // Cards de publicações recentes
     const recentCards = document.querySelectorAll('.recent-card');
     recentCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -169,8 +191,11 @@ function initializeCards() {
     });
 }
 
-
+// ========================================
+// SISTEMA DE MODAL DE LOGIN
+// ========================================
 function initializeModal() {
+    // Cria o modal de login se não existir
     if (!document.getElementById('loginModal')) {
         createLoginModal();
     }
@@ -218,8 +243,10 @@ function createLoginModal() {
     
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     
+    // Adiciona estilos do modal
     addModalStyles();
     
+    // Adiciona eventos do modal
     addModalEvents();
 }
 
@@ -425,30 +452,36 @@ function addModalEvents() {
     const loginForm = document.getElementById('loginForm');
     const switchToRegister = document.getElementById('switchToRegister');
     
+    // Fechar modal
     closeBtn.addEventListener('click', hideLoginModal);
     
+    // Fechar modal clicando fora
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
             hideLoginModal();
         }
     });
     
+    // Fechar modal com ESC
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal.style.display !== 'none') {
             hideLoginModal();
         }
     });
     
+    // Submit do formulário
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         handleLogin();
     });
     
+    // Trocar para registro
     switchToRegister.addEventListener('click', function(e) {
         e.preventDefault();
         switchToRegisterMode();
     });
     
+    // Link "Esqueci minha senha"
     modal.querySelector('.forgot-password').addEventListener('click', function(e) {
         e.preventDefault();
         showNotification('📧 Link de recuperação enviado para seu e-mail!', 'success');
@@ -473,6 +506,7 @@ function showLoginModal(message = '', mode = 'login') {
         modal.classList.add('show');
     }, 10);
     
+    // Foca no primeiro input
     setTimeout(() => {
         modal.querySelector('input').focus();
     }, 300);
@@ -495,12 +529,14 @@ function handleLogin() {
         return;
     }
     
+    // Simula processo de login
     showNotification('🔄 Fazendo login...', 'info');
     
     setTimeout(() => {
         hideLoginModal();
         showNotification(`✅ Bem-vindo de volta, ${email.split('@')[0]}!`, 'success');
         
+        // Simula mudanças na interface após login
         setTimeout(() => {
             updateUIAfterLogin(email);
         }, 1000);
@@ -531,7 +567,11 @@ function switchToLoginMode() {
     switchLink.innerHTML = 'Não tem uma conta? <a href="#" onclick="switchToRegisterMode()">Cadastre-se gratuitamente</a>';
 }
 
+// ========================================
+// SISTEMA DE BUSCA
+// ========================================
 function initializeSearch() {
+    // A barra de busca será criada dinamicamente
 }
 
 function toggleSearchBar() {
@@ -570,8 +610,10 @@ function createSearchBar() {
     
     document.body.insertAdjacentHTML('beforeend', searchHTML);
     
+    // Adiciona estilos da busca
     addSearchStyles();
     
+    // Adiciona eventos da busca
     addSearchEvents();
 }
 
@@ -727,7 +769,11 @@ function showSearchSuggestions(query) {
     }
 }
 
+// ========================================
+// SISTEMA DE NOTIFICAÇÕES
+// ========================================
 function showNotification(message, type = 'info') {
+    // Remove notificação anterior se existir
     const existingNotification = document.querySelector('.notification');
     if (existingNotification) {
         existingNotification.remove();
@@ -737,6 +783,7 @@ function showNotification(message, type = 'info') {
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
     
+    // Adiciona estilos inline para garantir que funcione
     notification.style.cssText = `
         position: fixed;
         top: 100px;
@@ -755,10 +802,12 @@ function showNotification(message, type = 'info') {
     
     document.body.appendChild(notification);
     
+    // Anima a entrada
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
     }, 10);
     
+    // Remove após 3 segundos
     setTimeout(() => {
         notification.style.transform = 'translateX(100%)';
         setTimeout(() => {
@@ -769,14 +818,19 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
+// ========================================
+// FUNÇÕES AUXILIARES
+// ========================================
 function updateBookGrid(period) {
     const bookGrid = document.querySelector('.book-grid');
     const books = bookGrid.querySelectorAll('.book-card');
     
+    // Simula mudança de conteúdo baseada no período
     books.forEach((book, index) => {
         const rating = book.querySelector('.rating span');
         const views = book.querySelector('.rating span:last-child');
         
+        // Simula dados diferentes para cada período
         if (period === 'dia') {
             rating.textContent = (4.5 + Math.random() * 0.5).toFixed(1);
             views.textContent = `${Math.floor(Math.random() * 5000 + 1000)} visualizações hoje`;
@@ -812,11 +866,13 @@ function showSupportModal() {
 }
 
 function updateUIAfterLogin(email) {
+    // Simula mudanças na interface após login
     const userBtn = document.querySelectorAll('.btn-icon')[1];
     if (userBtn) {
         userBtn.innerHTML = `<span style="color: #1db954; font-size: 12px; font-weight: 600;">${email.split('@')[0]}</span>`;
     }
     
+    // Adiciona indicador de usuário logado
     const header = document.querySelector('.header');
     if (header && !header.querySelector('.user-indicator')) {
         const indicator = document.createElement('div');
@@ -836,7 +892,11 @@ function updateUIAfterLogin(email) {
     }
 }
 
+// ========================================
+// EFEITOS DE SCROLL
+// ========================================
 function initializeScrollEffects() {
+    // Parallax suave no hero
     window.addEventListener('scroll', function() {
         const scrolled = window.pageYOffset;
         const hero = document.querySelector('.hero');
@@ -846,6 +906,7 @@ function initializeScrollEffects() {
         }
     });
     
+    // Animação de entrada dos elementos
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -860,6 +921,7 @@ function initializeScrollEffects() {
         });
     }, observerOptions);
     
+    // Observa cards e seções
     const elementsToAnimate = document.querySelectorAll('.book-card, .category-card, .recent-card');
     elementsToAnimate.forEach(el => {
         el.style.opacity = '0';
@@ -869,6 +931,28 @@ function initializeScrollEffects() {
     });
 }
 
+// ========================================
+// FUNÇÕES GLOBAIS (para compatibilidade)
+// ========================================
 window.switchToLoginMode = switchToLoginMode;
 window.switchToRegisterMode = switchToRegisterMode;
+
+// ========================================
+// LOG DE INICIALIZAÇÃO
+// ========================================
+console.log(`
+🚀 Leitura Livre JavaScript carregado!
+
+Funcionalidades ativas:
+✅ Navegação suave
+✅ Sistema de login/registro
+✅ Busca inteligente
+✅ Filtros interativos
+✅ Cards clicáveis
+✅ Notificações
+✅ Efeitos de scroll
+✅ Modal responsivo
+
+Desenvolvido com ❤️ para democratizar a literatura.
+`);
 

@@ -18,7 +18,7 @@
                 <ul>
                     <li><a href="#">Início</a></li>
                     <li><a href="#popular-books">Explorar Livros</a></li>
-                    <li><a href="#">Meus Livros</a></li>
+                    <li><a href="#my-publications">Minhas Publicações</a></li>
                     <li><a href="#">Escrever</a></li>
                 </ul>
             </nav>
@@ -192,6 +192,21 @@
                 </div>
             </div>
         </section>
+                <section class="my-publications" id="my-publications">
+            <div class="container">
+                <h2>Minhas Publicações</h2>
+                <p>Aqui você pode gerenciar seus PDFs publicados. Clique no botão abaixo para fazer upload de um novo PDF.</p>
+                <div class="upload-area">
+                    <input type="file" id="pdfUploadInput" accept=".pdf" style="display: none;">
+                    <button class="btn-primary" id="uploadPdfButton">Upload de PDF</button>
+                    <span id="fileNameDisplay" style="margin-left: 15px; color: var(--spotify-text-gray);">Nenhum arquivo selecionado</span>
+                </div>
+                <div class="pdf-list" id="pdfList">
+                    <!-- PDFs carregados dinamicamente aqui -->
+                    <p id="noPdfMessage" style="text-align: center; margin-top: 30px; color: var(--spotify-text-gray);">Nenhum PDF publicado ainda. Faça o upload do seu primeiro livro!</p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -241,4 +256,5 @@
     <script src="./script.js"></script>
 </body>
 </html>
+
 
