@@ -1,3 +1,8 @@
+// ========================================
+// LEITURA LIVRE - JAVASCRIPT PRINCIPAL
+// ========================================
+
+// Aguarda o carregamento completo da página
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Leitura Livre carregado com sucesso!');
     
@@ -52,10 +57,15 @@ function initializeButtons() {
     const btnStartWriting = document.querySelector('.hero .btn-cta');
     if (btnStartWriting) {
         btnStartWriting.addEventListener('click', function() {
-            showNotification('📝 Redirecionando para o editor de textos...', 'success');
+            showNotification("⬆️ Abrindo seletor de arquivos para upload de PDF...", "info");
             setTimeout(() => {
-                showLoginModal('Para começar a escrever, você precisa fazer login ou criar uma conta.');
-            }, 1000);
+                const pdfUploadInput = document.getElementById("pdfUploadInput");
+                if (pdfUploadInput) {
+                    pdfUploadInput.click();
+                } else {
+                    showNotification("❌ Erro: Input de upload de PDF não encontrado.", "error");
+                }
+            }, 500);
         });
     }
 
@@ -955,4 +965,146 @@ Funcionalidades ativas:
 
 Desenvolvido com ❤️ para democratizar a literatura.
 `);
+
+
+
+// ========================================
+// SISTEMA DE PUBLICAÇÃO DE PDF
+// ========================================
+function initializePdfUpload() {
+    const pdfUploadInput = document.getElementById("pdfUploadInput");
+    const uploadPdfButton = document.getElementById("uploadPdfButton");
+    const fileNameDisplay = document.getElementById("fileNameDisplay");
+    const pdfList = document.getElementById("pdfList");
+    const noPdfMessage = document.getElementById("noPdfMessage");
+
+    let uploadedPdfs = []; // Armazena PDFs temporariamente na sessão
+
+    // Evento para o botão de upload
+    if (uploadPdfButton) {
+        uploadPdfButton.addEventListener("click", function() {
+            pdfUploadInput.click(); // Simula o clique no input de arquivo
+        });
+    }
+
+    // Evento quando um arquivo é selecionado
+    if (pdfUploadInput) {
+        pdfUploadInput.addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.type !== "application/pdf") {
+                    showNotification("❌ Por favor, selecione um arquivo PDF.", "error");
+                    fileNameDisplay.textContent = "Nenhum arquivo selecionado";
+                    return;
+                }
+
+                fileNameDisplay.textContent = `Arquivo selecionado: ${file.name}`;
+                showNotification(`🔄 Preparando para carregar: ${file.name}`, "info");
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const pdfDataUrl = e.target.result;
+                    const newPdf = {
+                        name: file.name,
+                        url: pdfDataUrl,
+                        uploadDate: new Date().toLocaleDateString("pt-BR"),
+                        author: "Você (Usuário Atual)" // Simulação de autor
+                    };
+                    uploadedPdfs.push(newPdf);
+                    renderPdfList();
+                    showNotification(`✅ PDF '${file.name}' carregado com sucesso!`, "success");
+                };
+                reader.readAsDataURL(file);
+            } else {
+                fileNameDisplay.textContent = "Nenhum arquivo selecionado";
+            }
+        });
+    }
+
+    function renderPdfList() {
+        pdfList.innerHTML = ""; // Limpa a lista atual
+        if (uploadedPdfs.length === 0) {
+            noPdfMessage.style.display = "block";
+            pdfList.appendChild(noPdfMessage); // Garante que a mensagem esteja na lista
+        } else {
+            noPdfMessage.style.display = "none";
+            uploadedPdfs.forEach((pdf, index) => {
+                const pdfCard = document.createElement("div");
+                pdfCard.className = "pdf-card";
+                pdfCard.innerHTML = `
+                    <div class="pdf-thumbnail">📄</div>
+                    <div class="pdf-info">
+                        <h3>${pdf.name}</h3>
+                        <p>por ${pdf.author}</p>
+                        <p>Publicado em: ${pdf.uploadDate}</p>
+                    </div>
+                `;
+                pdfCard.addEventListener("click", () => showPdfViewer(pdf.name, pdf.url));
+                pdfList.appendChild(pdfCard);
+            });
+        }
+    }
+
+    // Inicializa a lista de PDFs ao carregar a página
+    renderPdfList();
+}
+
+function showPdfViewer(title, pdfUrl) {
+    let pdfViewerModal = document.getElementById("pdfViewerModal");
+    if (!pdfViewerModal) {
+        pdfViewerModal = document.createElement("div");
+        pdfViewerModal.id = "pdfViewerModal";
+        pdfViewerModal.className = "pdf-viewer-modal";
+        pdfViewerModal.innerHTML = `
+            <div class="pdf-viewer-content">
+                <div class="pdf-viewer-header">
+                    <h3 id="pdfViewerTitle"></h3>
+                    <button class="pdf-viewer-close">&times;</button>
+                </div>
+                <div class="pdf-viewer-body">
+                    <iframe id="pdfViewerFrame" src="" frameborder="0"></iframe>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(pdfViewerModal);
+
+        // Adiciona evento para fechar o modal
+        pdfViewerModal.querySelector(".pdf-viewer-close").addEventListener("click", hidePdfViewer);
+        pdfViewerModal.addEventListener("click", function(e) {
+            if (e.target === pdfViewerModal) {
+                hidePdfViewer();
+            }
+        });
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape" && pdfViewerModal.style.display !== "none") {
+                hidePdfViewer();
+            }
+        });
+    }
+
+    document.getElementById("pdfViewerTitle").textContent = title;
+    document.getElementById("pdfViewerFrame").src = pdfUrl;
+    pdfViewerModal.style.display = "flex";
+    setTimeout(() => {
+        pdfViewerModal.classList.add("show");
+    }, 10);
+}
+
+function hidePdfViewer() {
+    const pdfViewerModal = document.getElementById("pdfViewerModal");
+    if (pdfViewerModal) {
+        pdfViewerModal.classList.remove("show");
+        setTimeout(() => {
+            pdfViewerModal.style.display = "none";
+            document.getElementById("pdfViewerFrame").src = ""; // Limpa o iframe
+        }, 300);
+    }
+}
+
+// Adiciona a inicialização do upload de PDF ao DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    // ... (código existente)
+    initializePdfUpload(); // Nova chamada
+});
+
 
