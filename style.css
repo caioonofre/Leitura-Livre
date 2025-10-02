@@ -1,4 +1,3 @@
-/* Reset e configurações básicas */
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +5,6 @@
 }
 
 :root {
-    /* Cores inspiradas no Spotify */
     --spotify-black: #000000;
     --spotify-dark-gray: #121212;
     --spotify-gray: #1e1e1e;
@@ -17,12 +15,10 @@
     --spotify-text-gray: #b3b3b3;
     --spotify-text-light: #ffffff;
     
-    /* Gradientes */
     --gradient-primary: linear-gradient(135deg, #1db954 0%, #1ed760 100%);
     --gradient-dark: linear-gradient(180deg, #1e1e1e 0%, #121212 100%);
     --gradient-hero: linear-gradient(135deg, #1db954 0%, #1ed760 50%, #1aa34a 100%);
     
-    /* Sombras */
     --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.5);
     --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.7);
     --shadow-button: 0 4px 12px rgba(29, 185, 84, 0.3);
@@ -42,7 +38,6 @@ body {
     padding: 0 24px;
 }
 
-/* Header */
 .header {
     background: rgba(18, 18, 18, 0.95);
     backdrop-filter: blur(20px);
@@ -155,12 +150,10 @@ body {
     box-shadow: 0 8px 20px rgba(29, 185, 84, 0.4);
 }
 
-/* Main Content */
 main {
     margin-top: 80px;
 }
 
-/* Hero Section */
 .hero {
     background: var(--gradient-hero);
     padding: 80px 0 120px;
@@ -253,7 +246,6 @@ main {
     transform: translateY(-2px);
 }
 
-/* Sections */
 section {
     padding: 80px 0;
     background: var(--gradient-dark);
@@ -271,7 +263,6 @@ section h2 {
     text-align: center;
 }
 
-/* Popular Books */
 .popular-books .container {
     position: relative;
 }
@@ -382,7 +373,6 @@ section h2 {
     color: var(--spotify-text-gray);
 }
 
-/* Categories */
 .category-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -440,7 +430,6 @@ section h2 {
     font-size: 14px;
 }
 
-/* Recent Books */
 .recent-books .container {
     position: relative;
 }
@@ -512,7 +501,6 @@ section h2 {
     color: var(--spotify-text-gray);
 }
 
-/* CTA Section */
 .cta-section {
     background: var(--gradient-hero);
     text-align: center;
@@ -535,7 +523,6 @@ section h2 {
     flex-wrap: wrap;
 }
 
-/* Footer */
 .footer {
     background: var(--spotify-black);
     padding: 60px 0 20px;
@@ -618,7 +605,6 @@ section h2 {
     margin-bottom: 8px;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .header .container {
         flex-direction: column;
@@ -684,7 +670,6 @@ section h2 {
     }
 }
 
-/* Animações e efeitos especiais */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -707,7 +692,6 @@ section h2 {
 .book-card:nth-child(3) { animation-delay: 0.3s; }
 .book-card:nth-child(4) { animation-delay: 0.4s; }
 
-/* Scrollbar personalizada */
 ::-webkit-scrollbar {
     width: 12px;
 }
@@ -725,7 +709,6 @@ section h2 {
     background: var(--spotify-light-gray);
 }
 
-/* Efeitos de hover adicionais */
 .btn-primary:active {
     transform: translateY(0);
 }
@@ -734,7 +717,6 @@ section h2 {
     transform: translateY(-1px);
 }
 
-/* Melhorias de acessibilidade */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
@@ -743,7 +725,6 @@ section h2 {
     }
 }
 
-/* Focus states para acessibilidade */
 button:focus,
 a:focus {
     outline: 2px solid var(--spotify-green);
@@ -751,8 +732,6 @@ a:focus {
 }
 
 
-
-/* My Publications Section */
 .my-publications {
     padding: 80px 0;
     background: var(--spotify-dark-gray);
