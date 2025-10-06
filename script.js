@@ -18,20 +18,14 @@ function initializeNavigation() {
             const targetId = this.getAttribute('href').substring(1);
             const targetElement = document.getElementById(targetId);
             if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
     window.addEventListener('scroll', function() {
         const header = document.querySelector('.header');
-        if (window.scrollY > 100) {
-            header.style.background = 'rgba(18, 18, 18, 0.98)';
-        } else {
-            header.style.background = 'rgba(18, 18, 18, 0.95)';
-        }
+        if (!header) return;
+        header.style.background = window.scrollY > 100 ? 'rgba(18, 18, 18, 0.98)' : 'rgba(18, 18, 18, 0.95)';
     });
 }
 
@@ -39,13 +33,13 @@ function initializeButtons() {
     const btnStartWriting = document.querySelector('.hero .btn-cta');
     if (btnStartWriting) {
         btnStartWriting.addEventListener('click', function() {
-            showNotification("⬆️ Abrindo seletor de arquivos para upload de PDF...", "info");
+            showNotification('⬆️ Abrindo seletor de arquivos para upload de PDF...', 'info');
             setTimeout(() => {
-                const pdfUploadInput = document.getElementById("pdfUploadInput");
+                const pdfUploadInput = document.getElementById('pdfUploadInput');
                 if (pdfUploadInput) {
                     pdfUploadInput.click();
                 } else {
-                    showNotification("❌ Erro: Input de upload de PDF não encontrado.", "error");
+                    showNotification('❌ Erro: Input de upload de PDF não encontrado.', 'error');
                 }
             }, 500);
         });
@@ -55,54 +49,35 @@ function initializeButtons() {
         btnExploreBooks.addEventListener('click', function() {
             showNotification('📚 Explorando nossa biblioteca...', 'info');
             setTimeout(() => {
-                document.getElementById('popular-books').scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const target = document.getElementById('popular-books');
+                target && target.scrollIntoView({ behavior: 'smooth' });
             }, 500);
         });
     }
     const btnCreateAccount = document.querySelector('.cta-section .btn-cta');
-    if (btnCreateAccount) {
-        btnCreateAccount.addEventListener('click', function() {
+    btnCreateAccount && btnCreateAccount.addEventListener('click', function() {
             showLoginModal('Crie sua conta gratuita e comece a publicar hoje mesmo!', 'register');
         });
-    }
     const btnKnowCommunity = document.querySelector('.cta-section .btn-outline');
-    if (btnKnowCommunity) {
-        btnKnowCommunity.addEventListener('click', function() {
+    btnKnowCommunity && btnKnowCommunity.addEventListener('click', function() {
             showNotification('🌟 Carregando página da comunidade...', 'info');
             setTimeout(() => {
                 alert('Bem-vindo à nossa comunidade!\n\n• Mais de 50.000 autores ativos\n• Milhares de livros publicados\n• Comunidade acolhedora e colaborativa\n• Ferramentas gratuitas de publicação');
             }, 800);
         });
-    }
     const btnSeeAll = document.querySelector('.recent-books .btn-outline');
-    if (btnSeeAll) {
-        btnSeeAll.addEventListener('click', function() {
+    btnSeeAll && btnSeeAll.addEventListener('click', function() {
             showNotification('📖 Carregando todas as publicações...', 'info');
             setTimeout(() => {
                 alert('Aqui você encontraria todas as últimas publicações da plataforma, organizadas por data e categoria.');
             }, 800);
         });
-    }
     const btnSupport = document.querySelector('.btn-primary');
-    if (btnSupport) {
-        btnSupport.addEventListener('click', function() {
-            showSupportModal();
-        });
-    }
+    btnSupport && btnSupport.addEventListener('click', function() { showSupportModal(); });
     const btnSearch = document.querySelector('.btn-icon');
-    if (btnSearch) {
-        btnSearch.addEventListener('click', function() {
-            toggleSearchBar();
-        });
-    }
+    btnSearch && btnSearch.addEventListener('click', function() { toggleSearchBar(); });
     const btnUser = document.querySelectorAll('.btn-icon')[1];
-    if (btnUser) {
-        btnUser.addEventListener('click', function() {
-            showLoginModal('Acesse sua conta ou crie uma nova para continuar.');
-        });
-    }
+    btnUser && btnUser.addEventListener('click', function() { showLoginModal('Acesse sua conta ou crie uma nova para continuar.'); });
 }
 
 function initializeFilters() {
@@ -113,9 +88,7 @@ function initializeFilters() {
             this.classList.add('active');
             const period = this.textContent.toLowerCase();
             showNotification(`📊 Carregando livros populares do ${period}...`, 'info');
-            setTimeout(() => {
-                updateBookGrid(period);
-            }, 800);
+            setTimeout(() => { updateBookGrid(period); }, 800);
         });
     });
 }
@@ -135,9 +108,7 @@ function initializeCards() {
             const category = this.querySelector('h3').textContent;
             const count = this.querySelector('p').textContent;
             showNotification(`📚 Explorando categoria: ${category}`, 'info');
-            setTimeout(() => {
-                showCategoryDetailsModal(category, count);
-            }, 800);
+            setTimeout(() => { showCategoryDetailsModal(category, count); }, 800);
         });
     });
     const recentCards = document.querySelectorAll('.recent-card');
@@ -150,11 +121,7 @@ function initializeCards() {
     });
 }
 
-function initializeModal() {
-    if (!document.getElementById('loginModal')) {
-        createLoginModal();
-    }
-}
+function initializeModal() { if (!document.getElementById('loginModal')) createLoginModal(); }
 
 function createLoginModal() {
     const modalHTML = `
@@ -236,79 +203,43 @@ function addModalEvents() {
     const loginForm = document.getElementById('loginForm');
     const switchToRegister = document.getElementById('switchToRegister');
     closeBtn.addEventListener('click', hideLoginModal);
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            hideLoginModal();
-        }
-    });
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.style.display !== 'none') {
-            hideLoginModal();
-        }
-    });
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        handleLogin();
-    });
-    switchToRegister.addEventListener('click', function(e) {
-        e.preventDefault();
-        switchToRegisterMode();
-    });
-    modal.querySelector('.forgot-password').addEventListener('click', function(e) {
-        e.preventDefault();
-        showNotification('📧 Link de recuperação enviado para seu e-mail!', 'success');
-    });
+    modal.addEventListener('click', function(e) { if (e.target === modal) hideLoginModal(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modal.style.display !== 'none') hideLoginModal(); });
+    loginForm.addEventListener('submit', function(e) { e.preventDefault(); handleLogin(); });
+    switchToRegister.addEventListener('click', function(e) { e.preventDefault(); switchToRegisterMode(); });
+    modal.querySelector('.forgot-password').addEventListener('click', function(e) { e.preventDefault(); showNotification('📧 Link de recuperação enviado para seu e-mail!', 'success'); });
 }
 
 function showLoginModal(message = '', mode = 'login') {
     const modal = document.getElementById('loginModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalMessage = document.getElementById('modalMessage');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
     const loginButton = modal.querySelector('.btn-login');
     const switchLink = document.getElementById('switchToRegister');
-    if (message) {
-        modalMessage.textContent = message;
-    }
+    if (message) modalMessage.textContent = message;
     if (mode === 'register') {
         modalTitle.textContent = 'Criar Conta Gratuita';
         loginButton.textContent = 'Cadastrar';
         switchLink.innerHTML = 'Já tem uma conta? <a href="#" id="switchToLogin">Faça login</a>';
-        document.getElementById('switchToLogin').addEventListener('click', function(e) {
-            e.preventDefault();
-            switchToLoginMode();
-        });
+        document.getElementById('switchToLogin').addEventListener('click', function(e) { e.preventDefault(); switchToLoginMode(); });
     } else {
         modalTitle.textContent = 'Entrar na Leitura Livre';
         loginButton.textContent = 'Entrar';
         switchLink.innerHTML = 'Não tem uma conta? <a href="#" id="switchToRegister">Cadastre-se gratuitamente</a>';
-        document.getElementById('switchToRegister').addEventListener('click', function(e) {
-            e.preventDefault();
-            switchToRegisterMode();
-        });
+        document.getElementById('switchToRegister').addEventListener('click', function(e) { e.preventDefault(); switchToRegisterMode(); });
     }
     modal.style.display = 'flex';
-    setTimeout(() => {
-        modal.classList.add('show');
-    }, 10);
+    setTimeout(() => { modal.classList.add('show'); }, 10);
 }
 
 function hideLoginModal() {
     const modal = document.getElementById('loginModal');
     modal.classList.remove('show');
-    setTimeout(() => {
-        modal.style.display = 'none';
-    }, 300);
+    setTimeout(() => { modal.style.display = 'none'; }, 300);
 }
 
-function switchToRegisterMode() {
-    showLoginModal('Crie sua conta gratuita e comece a publicar hoje mesmo!', 'register');
-}
-
-function switchToLoginMode() {
-    showLoginModal('Acesse sua conta ou crie uma nova para continuar.', 'login');
-}
+function switchToRegisterMode() { showLoginModal('Crie sua conta gratuita e comece a publicar hoje mesmo!', 'register'); }
+function switchToLoginMode() { showLoginModal('Acesse sua conta ou crie uma nova para continuar.', 'login'); }
 
 function handleLogin() {
     const email = document.getElementById('email').value;
@@ -322,12 +253,9 @@ function handleLogin() {
 }
 
 function initializeSearch() {
-    const searchBar = document.getElementById('searchBar');
     const searchInput = document.getElementById('searchInput');
     const closeSearch = document.getElementById('closeSearch');
-    if (closeSearch) {
-        closeSearch.addEventListener('click', toggleSearchBar);
-    }
+    closeSearch && closeSearch.addEventListener('click', toggleSearchBar);
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const query = this.value.toLowerCase();
@@ -340,41 +268,74 @@ function initializeSearch() {
 
 function toggleSearchBar() {
     const searchBar = document.getElementById('searchBar');
-    if (searchBar) {
+    if (!searchBar) return;
         searchBar.classList.toggle('show');
         if (searchBar.classList.contains('show')) {
-            document.getElementById('searchInput').focus();
-        }
+        const input = document.getElementById('searchInput');
+        input && input.focus();
     }
 }
 
 function updateSearchSuggestions(suggestions) {
     const suggestionsContainer = document.getElementById('searchSuggestions');
-    if (suggestionsContainer) {
+    if (!suggestionsContainer) return;
         suggestionsContainer.innerHTML = '';
         if (suggestions.length > 0) {
             suggestions.forEach(suggestion => {
                 const li = document.createElement('li');
                 li.textContent = suggestion;
                 li.addEventListener('click', () => {
-                    document.getElementById('searchInput').value = suggestion;
+                const input = document.getElementById('searchInput');
+                if (input) input.value = suggestion;
                     suggestionsContainer.innerHTML = '';
                     showNotification(`🔍 Buscando por: ${suggestion}`, 'info');
                 });
                 suggestionsContainer.appendChild(li);
             });
-        }
     }
 }
 
 function initializeScrollEffects() {
     const parallax = document.querySelector('.hero');
-    if (parallax) {
+    if (!parallax) return;
         window.addEventListener('scroll', function() {
-            let offset = window.pageYOffset;
+        const offset = window.pageYOffset;
             parallax.style.backgroundPositionY = offset * 0.7 + 'px';
         });
+
+    // Cursor-follow glow for hero title
+    const heroTitle = document.querySelector('.hero h2');
+    if (heroTitle) {
+        const activate = () => heroTitle.classList.add('cursor-glow');
+        const deactivate = () => heroTitle.classList.remove('cursor-glow');
+        parallax.addEventListener('mousemove', (e) => {
+            activate();
+            const rect = heroTitle.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            heroTitle.style.setProperty('--mx', x + '%');
+            heroTitle.style.setProperty('--my', y + '%');
+        });
+        parallax.addEventListener('mouseleave', deactivate);
     }
+
+    // Cursor-follow glow on hero background layer
+    parallax.classList.add('cursor-glow');
+    parallax.addEventListener('mousemove', (e) => {
+        const rect = parallax.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        parallax.style.setProperty('--mx', x + '%');
+        parallax.style.setProperty('--my', y + '%');
+        // reverted to circular glow: no rotation/radius deformation
+    });
+    parallax.addEventListener('mouseleave', () => {
+        parallax.style.removeProperty('--mx');
+        parallax.style.removeProperty('--my');
+        parallax.style.removeProperty('--rot');
+        parallax.style.removeProperty('--rx');
+        parallax.style.removeProperty('--ry');
+    });
 }
 
 function showNotification(message, type = 'info') {
@@ -396,15 +357,33 @@ function showNotification(message, type = 'info') {
     }
     notification.textContent = message;
     notification.className = `show ${type}`;
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 4000);
+    setTimeout(() => { notification.classList.remove('show'); }, 4000);
 }
 
 function updateBookGrid(period) {
     const bookGrid = document.querySelector('.book-grid');
     if (!bookGrid) return;
+    // Render skeletons
     bookGrid.style.opacity = '0';
+    const skeleton = document.createElement('div');
+    skeleton.className = 'skeleton-grid';
+    skeleton.innerHTML = Array.from({ length: 4 }).map(() => `
+        <div class="skeleton-card">
+            <div class="skeleton-thumb"></div>
+            <div class="skeleton-body">
+                <div class="skeleton-line full"></div>
+                <div class="skeleton-line mid"></div>
+                <div class="skeleton-line short"></div>
+            </div>
+        </div>
+    `).join('');
+    const parent = bookGrid.parentElement;
+    if (parent) {
+        // Remove existing skeletons
+        const olds = parent.querySelectorAll('.skeleton-grid');
+        olds.forEach(n => n.remove());
+        parent.insertBefore(skeleton, bookGrid);
+    }
     setTimeout(() => {
         const allBooks = [
             { title: 'O Último Guardião das Estrelas', author: 'Ana Silva', genre: 'Fantasia' },
@@ -420,41 +399,46 @@ function updateBookGrid(period) {
         const bookCards = bookGrid.querySelectorAll('.book-card');
         bookCards.forEach((card, index) => {
             const book = shuffledBooks[index];
+            if (!book) return;
             card.querySelector('h3').textContent = book.title;
             card.querySelector('p').textContent = `por ${book.author}`;
             const randomImage = `https://picsum.photos/seed/${book.title.replace(/\s/g, '')}/400/600`;
             card.querySelector('img').src = randomImage;
         });
+        // Remove skeletons e mostrar conteúdo
+        if (parent) {
+            const olds2 = parent.querySelectorAll('.skeleton-grid');
+            olds2.forEach(n => n.remove());
+        }
         bookGrid.style.opacity = '1';
     }, 500);
     showNotification(`✅ Livros do ${period} atualizados!`, 'success');
 }
 
 function showBookModal(title, author, isRecent = false) {
-    let bookDetailsModal = document.getElementById("bookDetailsModal");
+    let bookDetailsModal = document.getElementById('bookDetailsModal');
     if (!bookDetailsModal) {
-        bookDetailsModal = document.createElement("div");
-        bookDetailsModal.id = "bookDetailsModal";
-        bookDetailsModal.className = "book-details-modal-overlay";
+        bookDetailsModal = document.createElement('div');
+        bookDetailsModal.id = 'bookDetailsModal';
+        bookDetailsModal.className = 'book-details-modal-overlay';
         bookDetailsModal.innerHTML = `
-            <div class="book-details-modal-content">
-                <div class="book-details-modal-header">
-                    <h3 id="bookDetailsTitle"></h3>
-                    <button class="book-details-modal-close">&times;</button>
+            <div class=\"book-details-modal-content\">
+                <div class=\"book-details-modal-header\">
+                    <h3 id=\"bookDetailsTitle\"></h3>
+                    <button class=\"book-details-modal-close\">&times;</button>
                 </div>
-                <div class="book-details-modal-body">
-                    <img id="bookDetailsCover" src="" alt="Capa do Livro" class="book-details-cover">
-                    <div class="book-details-text">
-                        <p class="book-details-author"></p>
-                        <p class="book-details-description" id="bookDetailsDescription"></p>
-                        <div class="book-details-actions">
-                            <button class="btn-primary">Ler Livro</button>
-                            <button class="btn-outline">Adicionar aos Favoritos</button>
+                <div class=\"book-details-modal-body\">
+                    <img id=\"bookDetailsCover\" src=\"\" alt=\"Capa do Livro\" class=\"book-details-cover\">
+                    <div class=\"book-details-text\">
+                        <p class=\"book-details-author\"></p>
+                        <p class=\"book-details-description\" id=\"bookDetailsDescription\"></p>
+                        <div class=\"book-details-actions\">
+                            <button class=\"btn-primary\">Ler Livro</button>
+                            <button class=\"btn-outline\">Adicionar aos Favoritos</button>
                         </div>
                     </div>
                 </div>
-            </div>
-        `;
+            </div>`;
         document.body.appendChild(bookDetailsModal);
         const styles = `
             <style>
@@ -474,47 +458,28 @@ function showBookModal(title, author, isRecent = false) {
             .book-details-actions { display: flex; gap: 15px; flex-wrap: wrap; }
             .book-details-actions .btn-primary, .book-details-actions .btn-outline { padding: 10px 20px; font-size: 14px; }
             @media (max-width: 600px) { .book-details-modal-body { flex-direction: column; align-items: center; text-align: center; } .book-details-cover { width: 150px; height: 225px; } .book-details-actions { justify-content: center; } }
-            </style>
-        `;
-        document.head.insertAdjacentHTML("beforeend", styles);
-        bookDetailsModal.querySelector(".book-details-modal-close").addEventListener("click", hideBookDetailsModal);
-        bookDetailsModal.addEventListener("click", function(e) {
-            if (e.target === bookDetailsModal) {
-                hideBookDetailsModal();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && bookDetailsModal.style.display !== "none") {
-                hideBookDetailsModal();
-            }
-        });
-        bookDetailsModal.querySelector(".btn-primary").addEventListener("click", function() {
-            showNotification(`📖 Lendo o livro: ${title}`, "info");
-            hideBookDetailsModal();
-        });
-        bookDetailsModal.querySelector(".btn-outline").addEventListener("click", function() {
-            showNotification(`❤️ Livro '${title}' adicionado aos favoritos!`, "success");
-        });
+            </style>`;
+        document.head.insertAdjacentHTML('beforeend', styles);
+        bookDetailsModal.querySelector('.book-details-modal-close').addEventListener('click', hideBookDetailsModal);
+        bookDetailsModal.addEventListener('click', function(e) { if (e.target === bookDetailsModal) hideBookDetailsModal(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && bookDetailsModal.style.display !== 'none') hideBookDetailsModal(); });
+        bookDetailsModal.querySelector('.btn-primary').addEventListener('click', function() { showNotification(`📖 Lendo o livro: ${title}`, 'info'); hideBookDetailsModal(); });
+        bookDetailsModal.querySelector('.btn-outline').addEventListener('click', function() { showNotification(`❤️ Livro '${title}' adicionado aos favoritos!`, 'success'); });
     }
-    document.getElementById("bookDetailsTitle").textContent = title;
-    document.querySelector(".book-details-author").textContent = author;
-    document.getElementById("bookDetailsDescription").textContent = ""; // Descrição vazia
+    document.getElementById('bookDetailsTitle').textContent = title;
+    document.querySelector('.book-details-author').textContent = author;
+    document.getElementById('bookDetailsDescription').textContent = '';
     const randomCover = `https://picsum.photos/seed/${Math.floor(Math.random() * 1000)}/180/270`;
-    document.getElementById("bookDetailsCover").src = randomCover;
-    bookDetailsModal.style.display = "flex";
-    setTimeout(() => {
-        bookDetailsModal.classList.add("show");
-    }, 10);
+    document.getElementById('bookDetailsCover').src = randomCover;
+    bookDetailsModal.style.display = 'flex';
+    setTimeout(() => { bookDetailsModal.classList.add('show'); }, 10);
 }
 
 function hideBookDetailsModal() {
-    const bookDetailsModal = document.getElementById("bookDetailsModal");
-    if (bookDetailsModal) {
-        bookDetailsModal.classList.remove("show");
-        setTimeout(() => {
-            bookDetailsModal.style.display = "none";
-        }, 300);
-    }
+    const bookDetailsModal = document.getElementById('bookDetailsModal');
+    if (!bookDetailsModal) return;
+    bookDetailsModal.classList.remove('show');
+    setTimeout(() => { bookDetailsModal.style.display = 'none'; }, 300);
 }
 
 function showSupportModal() {
@@ -523,67 +488,57 @@ function showSupportModal() {
 }
 
 function initializePdfUpload() {
-    const pdfUploadInput = document.getElementById("pdfUploadInput");
-    const uploadPdfButton = document.getElementById("uploadPdfButton");
-    const fileNameDisplay = document.getElementById("fileNameDisplay");
-    const pdfList = document.getElementById("pdfList");
-    const noPdfMessage = document.getElementById("noPdfMessage");
+    const pdfUploadInput = document.getElementById('pdfUploadInput');
+    const uploadPdfButton = document.getElementById('uploadPdfButton');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const pdfList = document.getElementById('pdfList');
+    const noPdfMessage = document.getElementById('noPdfMessage');
     let uploadedPdfs = [];
-    if (uploadPdfButton) {
-        uploadPdfButton.addEventListener("click", function() {
-            pdfUploadInput.click();
-        });
-    }
+    uploadPdfButton && uploadPdfButton.addEventListener('click', function() { pdfUploadInput && pdfUploadInput.click(); });
     if (pdfUploadInput) {
-        pdfUploadInput.addEventListener("change", function(event) {
+        pdfUploadInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
-                if (file.type !== "application/pdf") {
-                    showNotification("❌ Por favor, selecione um arquivo PDF.", "error");
-                    fileNameDisplay.textContent = "Nenhum arquivo selecionado";
+                if (file.type !== 'application/pdf') {
+                    showNotification('❌ Por favor, selecione um arquivo PDF.', 'error');
+                    fileNameDisplay && (fileNameDisplay.textContent = 'Nenhum arquivo selecionado');
                     return;
                 }
-                fileNameDisplay.textContent = `Arquivo selecionado: ${file.name}`;
-                showNotification(`🔄 Preparando para carregar: ${file.name}`, "info");
+                fileNameDisplay && (fileNameDisplay.textContent = `Arquivo selecionado: ${file.name}`);
+                showNotification(`🔄 Preparando para carregar: ${file.name}`, 'info');
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const pdfDataUrl = e.target.result;
-                    const newPdf = {
-                        name: file.name,
-                        url: pdfDataUrl,
-                        uploadDate: new Date().toLocaleDateString("pt-BR"),
-                        author: "Você (Usuário Atual)"
-                    };
+                    const newPdf = { name: file.name, url: pdfDataUrl, uploadDate: new Date().toLocaleDateString('pt-BR'), author: 'Você (Usuário Atual)' };
                     uploadedPdfs.push(newPdf);
                     renderPdfList();
-                    showNotification(`✅ PDF '${file.name}' carregado com sucesso!`, "success");
+                    showNotification(`✅ PDF '${file.name}' carregado com sucesso!`, 'success');
                 };
                 reader.readAsDataURL(file);
             } else {
-                fileNameDisplay.textContent = "Nenhum arquivo selecionado";
+                fileNameDisplay && (fileNameDisplay.textContent = 'Nenhum arquivo selecionado');
             }
         });
     }
-
     function renderPdfList() {
-        pdfList.innerHTML = "";
+        if (!pdfList) return;
+        pdfList.innerHTML = '';
         if (uploadedPdfs.length === 0) {
-            noPdfMessage.style.display = "block";
+            noPdfMessage.style.display = 'block';
             pdfList.appendChild(noPdfMessage);
         } else {
-            noPdfMessage.style.display = "none";
-            uploadedPdfs.forEach((pdf, index) => {
-                const pdfCard = document.createElement("div");
-                pdfCard.className = "pdf-card";
+            noPdfMessage.style.display = 'none';
+            uploadedPdfs.forEach((pdf) => {
+                const pdfCard = document.createElement('div');
+                pdfCard.className = 'pdf-card';
                 pdfCard.innerHTML = `
-                    <div class="pdf-thumbnail">📄</div>
-                    <div class="pdf-info">
+                    <div class=\"pdf-thumbnail\">📄</div>
+                    <div class=\"pdf-info\">
                         <h3>${pdf.name}</h3>
                         <p>por ${pdf.author}</p>
                         <p>Publicado em: ${pdf.uploadDate}</p>
-                    </div>
-                `;
-                pdfCard.addEventListener("click", () => showPdfViewer(pdf.name, pdf.url));
+                    </div>`;
+                pdfCard.addEventListener('click', () => showPdfViewer(pdf.name, pdf.url));
                 pdfList.appendChild(pdfCard);
             });
         }
@@ -592,75 +547,63 @@ function initializePdfUpload() {
 }
 
 function showPdfViewer(title, pdfUrl) {
-    let pdfViewerModal = document.getElementById("pdfViewerModal");
+    let pdfViewerModal = document.getElementById('pdfViewerModal');
     if (!pdfViewerModal) {
-        pdfViewerModal = document.createElement("div");
-        pdfViewerModal.id = "pdfViewerModal";
-        pdfViewerModal.className = "pdf-viewer-modal";
+        pdfViewerModal = document.createElement('div');
+        pdfViewerModal.id = 'pdfViewerModal';
+        pdfViewerModal.className = 'pdf-viewer-modal';
         pdfViewerModal.innerHTML = `
-            <div class="pdf-viewer-content">
-                <div class="pdf-viewer-header">
-                    <h3 id="pdfViewerTitle"></h3>
-                    <button class="pdf-viewer-close">&times;</button>
+            <div class=\"pdf-viewer-content\">
+                <div class=\"pdf-viewer-header\">
+                    <h3 id=\"pdfViewerTitle\"></h3>
+                    <button class=\"pdf-viewer-close\">&times;</button>
                 </div>
-                <div class="pdf-viewer-body">
-                    <iframe id="pdfViewerFrame" src="" frameborder="0"></iframe>
+                <div class=\"pdf-viewer-body\">
+                    <iframe id=\"pdfViewerFrame\" src=\"\" frameborder=\"0\"></iframe>
                 </div>
-            </div>
-        `;
+            </div>`;
         document.body.appendChild(pdfViewerModal);
-        pdfViewerModal.querySelector(".pdf-viewer-close").addEventListener("click", hidePdfViewer);
-        pdfViewerModal.addEventListener("click", function(e) {
-            if (e.target === pdfViewerModal) {
-                hidePdfViewer();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && pdfViewerModal.style.display !== "none") {
-                hidePdfViewer();
-            }
-        });
+        pdfViewerModal.querySelector('.pdf-viewer-close').addEventListener('click', hidePdfViewer);
+        pdfViewerModal.addEventListener('click', function(e) { if (e.target === pdfViewerModal) hidePdfViewer(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && pdfViewerModal.style.display !== 'none') hidePdfViewer(); });
     }
-    document.getElementById("pdfViewerTitle").textContent = title;
-    document.getElementById("pdfViewerFrame").src = pdfUrl;
-    pdfViewerModal.style.display = "flex";
-    setTimeout(() => {
-        pdfViewerModal.classList.add("show");
-    }, 10);
+    document.getElementById('pdfViewerTitle').textContent = title;
+    document.getElementById('pdfViewerFrame').src = pdfUrl;
+    pdfViewerModal.style.display = 'flex';
+    setTimeout(() => { pdfViewerModal.classList.add('show'); }, 10);
 }
 
 function hidePdfViewer() {
-    const pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (pdfViewerModal) {
-        pdfViewerModal.classList.remove("show");
+    const pdfViewerModal = document.getElementById('pdfViewerModal');
+    if (!pdfViewerModal) return;
+    pdfViewerModal.classList.remove('show');
         setTimeout(() => {
-            pdfViewerModal.style.display = "none";
-            document.getElementById("pdfViewerFrame").src = "";
+        pdfViewerModal.style.display = 'none';
+        const frame = document.getElementById('pdfViewerFrame');
+        if (frame) frame.src = '';
         }, 300);
-    }
 }
 
 function showCategoryDetailsModal(category, count) {
-    let categoryDetailsModal = document.getElementById("categoryDetailsModal");
+    let categoryDetailsModal = document.getElementById('categoryDetailsModal');
     if (!categoryDetailsModal) {
-        categoryDetailsModal = document.createElement("div");
-        categoryDetailsModal.id = "categoryDetailsModal";
-        categoryDetailsModal.className = "category-details-modal-overlay";
+        categoryDetailsModal = document.createElement('div');
+        categoryDetailsModal.id = 'categoryDetailsModal';
+        categoryDetailsModal.className = 'category-details-modal-overlay';
         categoryDetailsModal.innerHTML = `
-            <div class="category-details-modal-content">
-                <div class="category-details-modal-header">
-                    <h3 id="categoryDetailsTitle"></h3>
-                    <button class="category-details-modal-close">&times;</button>
+            <div class=\"category-details-modal-content\">
+                <div class=\"category-details-modal-header\">
+                    <h3 id=\"categoryDetailsTitle\"></h3>
+                    <button class=\"category-details-modal-close\">&times;</button>
                 </div>
-                <div class="category-details-modal-body">
-                    <p class="category-details-count"></p>
-                    <p class="category-details-description">Aqui você encontraria todos os livros desta categoria organizados por popularidade, data de publicação e avaliação.</p>
-                    <div class="category-details-actions">
-                        <button class="btn-primary">Ver Livros da Categoria</button>
+                <div class=\"category-details-modal-body\">
+                    <p class=\"category-details-count\"></p>
+                    <p class=\"category-details-description\">Aqui você encontraria todos os livros desta categoria organizados por popularidade, data de publicação e avaliação.</p>
+                    <div class=\"category-details-actions\">
+                        <button class=\"btn-primary\">Ver Livros da Categoria</button>
                     </div>
                 </div>
-            </div>
-        `;
+            </div>`;
         document.body.appendChild(categoryDetailsModal);
         const styles = `
             <style>
@@ -676,1186 +619,23 @@ function showCategoryDetailsModal(category, count) {
             .category-details-count { color: var(--spotify-text-gray); font-size: 18px; margin-bottom: 5px; }
             .category-details-description { color: var(--spotify-white); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
             .category-details-actions .btn-primary { padding: 10px 20px; font-size: 14px; }
-            </style>
-        `;
-        document.head.insertAdjacentHTML("beforeend", styles);
-        categoryDetailsModal.querySelector(".category-details-modal-close").addEventListener("click", hideCategoryDetailsModal);
-        categoryDetailsModal.addEventListener("click", function(e) {
-            if (e.target === categoryDetailsModal) {
-                hideCategoryDetailsModal();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && categoryDetailsModal.style.display !== "none") {
-                hideCategoryDetailsModal();
-            }
-        });
-        categoryDetailsModal.querySelector(".btn-primary").addEventListener("click", function() {
-            showNotification(`📚 Carregando livros da categoria: ${category}`, "info");
-            hideCategoryDetailsModal();
-        });
+            </style>`;
+        document.head.insertAdjacentHTML('beforeend', styles);
+        categoryDetailsModal.querySelector('.category-details-modal-close').addEventListener('click', hideCategoryDetailsModal);
+        categoryDetailsModal.addEventListener('click', function(e) { if (e.target === categoryDetailsModal) hideCategoryDetailsModal(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && categoryDetailsModal.style.display !== 'none') hideCategoryDetailsModal(); });
+        categoryDetailsModal.querySelector('.btn-primary').addEventListener('click', function() { showNotification(`📚 Carregando livros da categoria: ${category}`, 'info'); hideCategoryDetailsModal(); });
     }
-    document.getElementById("categoryDetailsTitle").textContent = `Categoria: ${category}`;
-    document.querySelector(".category-details-count").textContent = count;
-    categoryDetailsModal.style.display = "flex";
-    setTimeout(() => {
-        categoryDetailsModal.classList.add("show");
-    }, 10);
+    document.getElementById('categoryDetailsTitle').textContent = `Categoria: ${category}`;
+    document.querySelector('.category-details-count').textContent = count;
+    categoryDetailsModal.style.display = 'flex';
+    setTimeout(() => { categoryDetailsModal.classList.add('show'); }, 10);
 }
 
 function hideCategoryDetailsModal() {
-    const categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (categoryDetailsModal) {
-        categoryDetailsModal.classList.remove("show");
-        setTimeout(() => {
-            categoryDetailsModal.style.display = "none";
-        }, 300);
-    }
-}
-
-function initializePdfUpload() {
-    const pdfUploadInput = document.getElementById("pdfUploadInput");
-    const uploadPdfButton = document.getElementById("uploadPdfButton");
-    const fileNameDisplay = document.getElementById("fileNameDisplay");
-    const pdfList = document.getElementById("pdfList");
-    const noPdfMessage = document.getElementById("noPdfMessage");
-    let uploadedPdfs = [];
-    if (uploadPdfButton) {
-        uploadPdfButton.addEventListener("click", function() {
-            pdfUploadInput.click();
-        });
-    }
-    if (pdfUploadInput) {
-        pdfUploadInput.addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.type !== "application/pdf") {
-                    showNotification("❌ Por favor, selecione um arquivo PDF.", "error");
-                    fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-                    return;
-                }
-                fileNameDisplay.textContent = `Arquivo selecionado: ${file.name}`;
-                showNotification(`🔄 Preparando para carregar: ${file.name}`, "info");
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const pdfDataUrl = e.target.result;
-                    const newPdf = {
-                        name: file.name,
-                        url: pdfDataUrl,
-                        uploadDate: new Date().toLocaleDateString("pt-BR"),
-                        author: "Você (Usuário Atual)"
-                    };
-                    uploadedPdfs.push(newPdf);
-                    renderPdfList();
-                    showNotification(`✅ PDF '${file.name}' carregado com sucesso!`, "success");
-                };
-                reader.readAsDataURL(file);
-            } else {
-                fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-            }
-        });
-    }
-
-    function renderPdfList() {
-        pdfList.innerHTML = "";
-        if (uploadedPdfs.length === 0) {
-            noPdfMessage.style.display = "block";
-            pdfList.appendChild(noPdfMessage);
-        } else {
-            noPdfMessage.style.display = "none";
-            uploadedPdfs.forEach((pdf, index) => {
-                const pdfCard = document.createElement("div");
-                pdfCard.className = "pdf-card";
-                pdfCard.innerHTML = `
-                    <div class="pdf-thumbnail">📄</div>
-                    <div class="pdf-info">
-                        <h3>${pdf.name}</h3>
-                        <p>por ${pdf.author}</p>
-                        <p>Publicado em: ${pdf.uploadDate}</p>
-                    </div>
-                `;
-                pdfCard.addEventListener("click", () => showPdfViewer(pdf.name, pdf.url));
-                pdfList.appendChild(pdfCard);
-            });
-        }
-    }
-    renderPdfList();
-}
-
-function showPdfViewer(title, pdfUrl) {
-    let pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (!pdfViewerModal) {
-        pdfViewerModal = document.createElement("div");
-        pdfViewerModal.id = "pdfViewerModal";
-        pdfViewerModal.className = "pdf-viewer-modal";
-        pdfViewerModal.innerHTML = `
-            <div class="pdf-viewer-content">
-                <div class="pdf-viewer-header">
-                    <h3 id="pdfViewerTitle"></h3>
-                    <button class="pdf-viewer-close">&times;</button>
-                </div>
-                <div class="pdf-viewer-body">
-                    <iframe id="pdfViewerFrame" src="" frameborder="0"></iframe>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(pdfViewerModal);
-        pdfViewerModal.querySelector(".pdf-viewer-close").addEventListener("click", hidePdfViewer);
-        pdfViewerModal.addEventListener("click", function(e) {
-            if (e.target === pdfViewerModal) {
-                hidePdfViewer();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && pdfViewerModal.style.display !== "none") {
-                hidePdfViewer();
-            }
-        });
-    }
-    document.getElementById("pdfViewerTitle").textContent = title;
-    document.getElementById("pdfViewerFrame").src = pdfUrl;
-    pdfViewerModal.style.display = "flex";
-    setTimeout(() => {
-        pdfViewerModal.classList.add("show");
-    }, 10);
-}
-
-function hidePdfViewer() {
-    const pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (pdfViewerModal) {
-        pdfViewerModal.classList.remove("show");
-        setTimeout(() => {
-            pdfViewerModal.style.display = "none";
-            document.getElementById("pdfViewerFrame").src = "";
-        }, 300);
-    }
-}
-
-function showCategoryDetailsModal(category, count) {
-    let categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (!categoryDetailsModal) {
-        categoryDetailsModal = document.createElement("div");
-        categoryDetailsModal.id = "categoryDetailsModal";
-        categoryDetailsModal.className = "category-details-modal-overlay";
-        categoryDetailsModal.innerHTML = `
-            <div class="category-details-modal-content">
-                <div class="category-details-modal-header">
-                    <h3 id="categoryDetailsTitle"></h3>
-                    <button class="category-details-modal-close">&times;</button>
-                </div>
-                <div class="category-details-modal-body">
-                    <p class="category-details-count"></p>
-                    <p class="category-details-description">Aqui você encontraria todos os livros desta categoria organizados por popularidade, data de publicação e avaliação.</p>
-                    <div class="category-details-actions">
-                        <button class="btn-primary">Ver Livros da Categoria</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(categoryDetailsModal);
-        const styles = `
-            <style>
-            .category-details-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 10004; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-            .category-details-modal-overlay.show { opacity: 1; }
-            .category-details-modal-content { background: var(--spotify-gray); border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--spotify-light-gray); display: flex; flex-direction: column; text-align: center; }
-            .category-details-modal-overlay.show .category-details-modal-content { transform: translateY(0); }
-            .category-details-modal-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--spotify-light-gray); }
-            .category-details-modal-header h3 { color: var(--spotify-white); font-size: 24px; margin: 0; flex-grow: 1; text-align: center; }
-            .category-details-modal-close { background: none; border: none; color: var(--spotify-text-gray); font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s ease; }
-            .category-details-modal-close:hover { background: var(--spotify-light-gray); color: var(--spotify-white); }
-            .category-details-modal-body { padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-            .category-details-count { color: var(--spotify-text-gray); font-size: 18px; margin-bottom: 5px; }
-            .category-details-description { color: var(--spotify-white); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-            .category-details-actions .btn-primary { padding: 10px 20px; font-size: 14px; }
-            </style>
-        `;
-        document.head.insertAdjacentHTML("beforeend", styles);
-        categoryDetailsModal.querySelector(".category-details-modal-close").addEventListener("click", hideCategoryDetailsModal);
-        categoryDetailsModal.addEventListener("click", function(e) {
-            if (e.target === categoryDetailsModal) {
-                hideCategoryDetailsModal();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && categoryDetailsModal.style.display !== "none") {
-                hideCategoryDetailsModal();
-            }
-        });
-        categoryDetailsModal.querySelector(".btn-primary").addEventListener("click", function() {
-            showNotification(`📚 Carregando livros da categoria: ${category}`, "info");
-            hideCategoryDetailsModal();
-        });
-    }
-    document.getElementById("categoryDetailsTitle").textContent = `Categoria: ${category}`;
-    document.querySelector(".category-details-count").textContent = count;
-    categoryDetailsModal.style.display = "flex";
-    setTimeout(() => {
-        categoryDetailsModal.classList.add("show");
-    }, 10);
-}
-
-function hideCategoryDetailsModal() {
-    const categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (categoryDetailsModal) {
-        categoryDetailsModal.classList.remove("show");
-        setTimeout(() => {
-            categoryDetailsModal.style.display = "none";
-        }, 300);
-    }
-}
-
-function initializePdfUpload() {
-    const pdfUploadInput = document.getElementById("pdfUploadInput");
-    const uploadPdfButton = document.getElementById("uploadPdfButton");
-    const fileNameDisplay = document.getElementById("fileNameDisplay");
-    const pdfList = document.getElementById("pdfList");
-    const noPdfMessage = document.getElementById("noPdfMessage");
-    let uploadedPdfs = [];
-    if (uploadPdfButton) {
-        uploadPdfButton.addEventListener("click", function() {
-            pdfUploadInput.click();
-        });
-    }
-    if (pdfUploadInput) {
-        pdfUploadInput.addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.type !== "application/pdf") {
-                    showNotification("❌ Por favor, selecione um arquivo PDF.", "error");
-                    fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-                    return;
-                }
-                fileNameDisplay.textContent = `Arquivo selecionado: ${file.name}`;
-                showNotification(`🔄 Preparando para carregar: ${file.name}`, "info");
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const pdfDataUrl = e.target.result;
-                    const newPdf = {
-                        name: file.name,
-                        url: pdfDataUrl,
-                        uploadDate: new Date().toLocaleDateString("pt-BR"),
-                        author: "Você (Usuário Atual)"
-                    };
-                    uploadedPdfs.push(newPdf);
-                    renderPdfList();
-                    showNotification(`✅ PDF '${file.name}' carregado com sucesso!`, "success");
-                };
-                reader.readAsDataURL(file);
-            } else {
-                fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-            }
-        });
-    }
-
-    function renderPdfList() {
-        pdfList.innerHTML = "";
-        if (uploadedPdfs.length === 0) {
-            noPdfMessage.style.display = "block";
-            pdfList.appendChild(noPdfMessage);
-        } else {
-            noPdfMessage.style.display = "none";
-            uploadedPdfs.forEach((pdf, index) => {
-                const pdfCard = document.createElement("div");
-                pdfCard.className = "pdf-card";
-                pdfCard.innerHTML = `
-                    <div class="pdf-thumbnail">📄</div>
-                    <div class="pdf-info">
-                        <h3>${pdf.name}</h3>
-                        <p>por ${pdf.author}</p>
-                        <p>Publicado em: ${pdf.uploadDate}</p>
-                    </div>
-                `;
-                pdfCard.addEventListener("click", () => showPdfViewer(pdf.name, pdf.url));
-                pdfList.appendChild(pdfCard);
-            });
-        }
-    }
-    renderPdfList();
-}
-
-function showPdfViewer(title, pdfUrl) {
-    let pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (!pdfViewerModal) {
-        pdfViewerModal = document.createElement("div");
-        pdfViewerModal.id = "pdfViewerModal";
-        pdfViewerModal.className = "pdf-viewer-modal";
-        pdfViewerModal.innerHTML = `
-            <div class="pdf-viewer-content">
-                <div class="pdf-viewer-header">
-                    <h3 id="pdfViewerTitle"></h3>
-                    <button class="pdf-viewer-close">&times;</button>
-                </div>
-                <div class="pdf-viewer-body">
-                    <iframe id="pdfViewerFrame" src="" frameborder="0"></iframe>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(pdfViewerModal);
-        pdfViewerModal.querySelector(".pdf-viewer-close").addEventListener("click", hidePdfViewer);
-        pdfViewerModal.addEventListener("click", function(e) {
-            if (e.target === pdfViewerModal) {
-                hidePdfViewer();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && pdfViewerModal.style.display !== "none") {
-                hidePdfViewer();
-            }
-        });
-    }
-    document.getElementById("pdfViewerTitle").textContent = title;
-    document.getElementById("pdfViewerFrame").src = pdfUrl;
-    pdfViewerModal.style.display = "flex";
-    setTimeout(() => {
-        pdfViewerModal.classList.add("show");
-    }, 10);
-}
-
-function hidePdfViewer() {
-    const pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (pdfViewerModal) {
-        pdfViewerModal.classList.remove("show");
-        setTimeout(() => {
-            pdfViewerModal.style.display = "none";
-            document.getElementById("pdfViewerFrame").src = "";
-        }, 300);
-    }
-}
-
-function showCategoryDetailsModal(category, count) {
-    let categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (!categoryDetailsModal) {
-        categoryDetailsModal = document.createElement("div");
-        categoryDetailsModal.id = "categoryDetailsModal";
-        categoryDetailsModal.className = "category-details-modal-overlay";
-        categoryDetailsModal.innerHTML = `
-            <div class="category-details-modal-content">
-                <div class="category-details-modal-header">
-                    <h3 id="categoryDetailsTitle"></h3>
-                    <button class="category-details-modal-close">&times;</button>
-                </div>
-                <div class="category-details-modal-body">
-                    <p class="category-details-count"></p>
-                    <p class="category-details-description">Aqui você encontraria todos os livros desta categoria organizados por popularidade, data de publicação e avaliação.</p>
-                    <div class="category-details-actions">
-                        <button class="btn-primary">Ver Livros da Categoria</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(categoryDetailsModal);
-        const styles = `
-            <style>
-            .category-details-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 10004; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-            .category-details-modal-overlay.show { opacity: 1; }
-            .category-details-modal-content { background: var(--spotify-gray); border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--spotify-light-gray); display: flex; flex-direction: column; text-align: center; }
-            .category-details-modal-overlay.show .category-details-modal-content { transform: translateY(0); }
-            .category-details-modal-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--spotify-light-gray); }
-            .category-details-modal-header h3 { color: var(--spotify-white); font-size: 24px; margin: 0; flex-grow: 1; text-align: center; }
-            .category-details-modal-close { background: none; border: none; color: var(--spotify-text-gray); font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s ease; }
-            .category-details-modal-close:hover { background: var(--spotify-light-gray); color: var(--spotify-white); }
-            .category-details-modal-body { padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-            .category-details-count { color: var(--spotify-text-gray); font-size: 18px; margin-bottom: 5px; }
-            .category-details-description { color: var(--spotify-white); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-            .category-details-actions .btn-primary { padding: 10px 20px; font-size: 14px; }
-            </style>
-        `;
-        document.head.insertAdjacentHTML("beforeend", styles);
-        categoryDetailsModal.querySelector(".category-details-modal-close").addEventListener("click", hideCategoryDetailsModal);
-        categoryDetailsModal.addEventListener("click", function(e) {
-            if (e.target === categoryDetailsModal) {
-                hideCategoryDetailsModal();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && categoryDetailsModal.style.display !== "none") {
-                hideCategoryDetailsModal();
-            }
-        });
-        categoryDetailsModal.querySelector(".btn-primary").addEventListener("click", function() {
-            showNotification(`📚 Carregando livros da categoria: ${category}`, "info");
-            hideCategoryDetailsModal();
-        });
-    }
-    document.getElementById("categoryDetailsTitle").textContent = `Categoria: ${category}`;
-    document.querySelector(".category-details-count").textContent = count;
-    categoryDetailsModal.style.display = "flex";
-    setTimeout(() => {
-        categoryDetailsModal.classList.add("show");
-    }, 10);
-}
-
-function hideCategoryDetailsModal() {
-    const categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (categoryDetailsModal) {
-        categoryDetailsModal.classList.remove("show");
-        setTimeout(() => {
-            categoryDetailsModal.style.display = "none";
-        }, 300);
-    }
-}
-
-function initializePdfUpload() {
-    const pdfUploadInput = document.getElementById("pdfUploadInput");
-    const uploadPdfButton = document.getElementById("uploadPdfButton");
-    const fileNameDisplay = document.getElementById("fileNameDisplay");
-    const pdfList = document.getElementById("pdfList");
-    const noPdfMessage = document.getElementById("noPdfMessage");
-    let uploadedPdfs = [];
-    if (uploadPdfButton) {
-        uploadPdfButton.addEventListener("click", function() {
-            pdfUploadInput.click();
-        });
-    }
-    if (pdfUploadInput) {
-        pdfUploadInput.addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.type !== "application/pdf") {
-                    showNotification("❌ Por favor, selecione um arquivo PDF.", "error");
-                    fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-                    return;
-                }
-                fileNameDisplay.textContent = `Arquivo selecionado: ${file.name}`;
-                showNotification(`🔄 Preparando para carregar: ${file.name}`, "info");
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const pdfDataUrl = e.target.result;
-                    const newPdf = {
-                        name: file.name,
-                        url: pdfDataUrl,
-                        uploadDate: new Date().toLocaleDateString("pt-BR"),
-                        author: "Você (Usuário Atual)"
-                    };
-                    uploadedPdfs.push(newPdf);
-                    renderPdfList();
-                    showNotification(`✅ PDF '${file.name}' carregado com sucesso!`, "success");
-                };
-                reader.readAsDataURL(file);
-            } else {
-                fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-            }
-        });
-    }
-
-    function renderPdfList() {
-        pdfList.innerHTML = "";
-        if (uploadedPdfs.length === 0) {
-            noPdfMessage.style.display = "block";
-            pdfList.appendChild(noPdfMessage);
-        } else {
-            noPdfMessage.style.display = "none";
-            uploadedPdfs.forEach((pdf, index) => {
-                const pdfCard = document.createElement("div");
-                pdfCard.className = "pdf-card";
-                pdfCard.innerHTML = `
-                    <div class="pdf-thumbnail">📄</div>
-                    <div class="pdf-info">
-                        <h3>${pdf.name}</h3>
-                        <p>por ${pdf.author}</p>
-                        <p>Publicado em: ${pdf.uploadDate}</p>
-                    </div>
-                `;
-                pdfCard.addEventListener("click", () => showPdfViewer(pdf.name, pdf.url));
-                pdfList.appendChild(pdfCard);
-            });
-        }
-    }
-    renderPdfList();
-}
-
-function showPdfViewer(title, pdfUrl) {
-    let pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (!pdfViewerModal) {
-        pdfViewerModal = document.createElement("div");
-        pdfViewerModal.id = "pdfViewerModal";
-        pdfViewerModal.className = "pdf-viewer-modal";
-        pdfViewerModal.innerHTML = `
-            <div class="pdf-viewer-content">
-                <div class="pdf-viewer-header">
-                    <h3 id="pdfViewerTitle"></h3>
-                    <button class="pdf-viewer-close">&times;</button>
-                </div>
-                <div class="pdf-viewer-body">
-                    <iframe id="pdfViewerFrame" src="" frameborder="0"></iframe>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(pdfViewerModal);
-        pdfViewerModal.querySelector(".pdf-viewer-close").addEventListener("click", hidePdfViewer);
-        pdfViewerModal.addEventListener("click", function(e) {
-            if (e.target === pdfViewerModal) {
-                hidePdfViewer();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && pdfViewerModal.style.display !== "none") {
-                hidePdfViewer();
-            }
-        });
-    }
-    document.getElementById("pdfViewerTitle").textContent = title;
-    document.getElementById("pdfViewerFrame").src = pdfUrl;
-    pdfViewerModal.style.display = "flex";
-    setTimeout(() => {
-        pdfViewerModal.classList.add("show");
-    }, 10);
-}
-
-function hidePdfViewer() {
-    const pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (pdfViewerModal) {
-        pdfViewerModal.classList.remove("show");
-        setTimeout(() => {
-            pdfViewerModal.style.display = "none";
-            document.getElementById("pdfViewerFrame").src = "";
-        }, 300);
-    }
-}
-
-function showCategoryDetailsModal(category, count) {
-    let categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (!categoryDetailsModal) {
-        categoryDetailsModal = document.createElement("div");
-        categoryDetailsModal.id = "categoryDetailsModal";
-        categoryDetailsModal.className = "category-details-modal-overlay";
-        categoryDetailsModal.innerHTML = `
-            <div class="category-details-modal-content">
-                <div class="category-details-modal-header">
-                    <h3 id="categoryDetailsTitle"></h3>
-                    <button class="category-details-modal-close">&times;</button>
-                </div>
-                <div class="category-details-modal-body">
-                    <p class="category-details-count"></p>
-                    <p class="category-details-description">Aqui você encontraria todos os livros desta categoria organizados por popularidade, data de publicação e avaliação.</p>
-                    <div class="category-details-actions">
-                        <button class="btn-primary">Ver Livros da Categoria</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(categoryDetailsModal);
-        const styles = `
-            <style>
-            .category-details-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 10004; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-            .category-details-modal-overlay.show { opacity: 1; }
-            .category-details-modal-content { background: var(--spotify-gray); border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--spotify-light-gray); display: flex; flex-direction: column; text-align: center; }
-            .category-details-modal-overlay.show .category-details-modal-content { transform: translateY(0); }
-            .category-details-modal-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--spotify-light-gray); }
-            .category-details-modal-header h3 { color: var(--spotify-white); font-size: 24px; margin: 0; flex-grow: 1; text-align: center; }
-            .category-details-modal-close { background: none; border: none; color: var(--spotify-text-gray); font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s ease; }
-            .category-details-modal-close:hover { background: var(--spotify-light-gray); color: var(--spotify-white); }
-            .category-details-modal-body { padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-            .category-details-count { color: var(--spotify-text-gray); font-size: 18px; margin-bottom: 5px; }
-            .category-details-description { color: var(--spotify-white); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-            .category-details-actions .btn-primary { padding: 10px 20px; font-size: 14px; }
-            </style>
-        `;
-        document.head.insertAdjacentHTML("beforeend", styles);
-        categoryDetailsModal.querySelector(".category-details-modal-close").addEventListener("click", hideCategoryDetailsModal);
-        categoryDetailsModal.addEventListener("click", function(e) {
-            if (e.target === categoryDetailsModal) {
-                hideCategoryDetailsModal();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && categoryDetailsModal.style.display !== "none") {
-                hideCategoryDetailsModal();
-            }
-        });
-        categoryDetailsModal.querySelector(".btn-primary").addEventListener("click", function() {
-            showNotification(`📚 Carregando livros da categoria: ${category}`, "info");
-            hideCategoryDetailsModal();
-        });
-    }
-    document.getElementById("categoryDetailsTitle").textContent = `Categoria: ${category}`;
-    document.querySelector(".category-details-count").textContent = count;
-    categoryDetailsModal.style.display = "flex";
-    setTimeout(() => {
-        categoryDetailsModal.classList.add("show");
-    }, 10);
-}
-
-function hideCategoryDetailsModal() {
-    const categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (categoryDetailsModal) {
-        categoryDetailsModal.classList.remove("show");
-        setTimeout(() => {
-            categoryDetailsModal.style.display = "none";
-        }, 300);
-    }
-}
-
-function initializePdfUpload() {
-    const pdfUploadInput = document.getElementById("pdfUploadInput");
-    const uploadPdfButton = document.getElementById("uploadPdfButton");
-    const fileNameDisplay = document.getElementById("fileNameDisplay");
-    const pdfList = document.getElementById("pdfList");
-    const noPdfMessage = document.getElementById("noPdfMessage");
-    let uploadedPdfs = [];
-    if (uploadPdfButton) {
-        uploadPdfButton.addEventListener("click", function() {
-            pdfUploadInput.click();
-        });
-    }
-    if (pdfUploadInput) {
-        pdfUploadInput.addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.type !== "application/pdf") {
-                    showNotification("❌ Por favor, selecione um arquivo PDF.", "error");
-                    fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-                    return;
-                }
-                fileNameDisplay.textContent = `Arquivo selecionado: ${file.name}`;
-                showNotification(`🔄 Preparando para carregar: ${file.name}`, "info");
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const pdfDataUrl = e.target.result;
-                    const newPdf = {
-                        name: file.name,
-                        url: pdfDataUrl,
-                        uploadDate: new Date().toLocaleDateString("pt-BR"),
-                        author: "Você (Usuário Atual)"
-                    };
-                    uploadedPdfs.push(newPdf);
-                    renderPdfList();
-                    showNotification(`✅ PDF '${file.name}' carregado com sucesso!`, "success");
-                };
-                reader.readAsDataURL(file);
-            } else {
-                fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-            }
-        });
-    }
-
-    function renderPdfList() {
-        pdfList.innerHTML = "";
-        if (uploadedPdfs.length === 0) {
-            noPdfMessage.style.display = "block";
-            pdfList.appendChild(noPdfMessage);
-        } else {
-            noPdfMessage.style.display = "none";
-            uploadedPdfs.forEach((pdf, index) => {
-                const pdfCard = document.createElement("div");
-                pdfCard.className = "pdf-card";
-                pdfCard.innerHTML = `
-                    <div class="pdf-thumbnail">📄</div>
-                    <div class="pdf-info">
-                        <h3>${pdf.name}</h3>
-                        <p>por ${pdf.author}</p>
-                        <p>Publicado em: ${pdf.uploadDate}</p>
-                    </div>
-                `;
-                pdfCard.addEventListener("click", () => showPdfViewer(pdf.name, pdf.url));
-                pdfList.appendChild(pdfCard);
-            });
-        }
-    }
-    renderPdfList();
-}
-
-function showPdfViewer(title, pdfUrl) {
-    let pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (!pdfViewerModal) {
-        pdfViewerModal = document.createElement("div");
-        pdfViewerModal.id = "pdfViewerModal";
-        pdfViewerModal.className = "pdf-viewer-modal";
-        pdfViewerModal.innerHTML = `
-            <div class="pdf-viewer-content">
-                <div class="pdf-viewer-header">
-                    <h3 id="pdfViewerTitle"></h3>
-                    <button class="pdf-viewer-close">&times;</button>
-                </div>
-                <div class="pdf-viewer-body">
-                    <iframe id="pdfViewerFrame" src="" frameborder="0"></iframe>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(pdfViewerModal);
-        pdfViewerModal.querySelector(".pdf-viewer-close").addEventListener("click", hidePdfViewer);
-        pdfViewerModal.addEventListener("click", function(e) {
-            if (e.target === pdfViewerModal) {
-                hidePdfViewer();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && pdfViewerModal.style.display !== "none") {
-                hidePdfViewer();
-            }
-        });
-    }
-    document.getElementById("pdfViewerTitle").textContent = title;
-    document.getElementById("pdfViewerFrame").src = pdfUrl;
-    pdfViewerModal.style.display = "flex";
-    setTimeout(() => {
-        pdfViewerModal.classList.add("show");
-    }, 10);
-}
-
-function hidePdfViewer() {
-    const pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (pdfViewerModal) {
-        pdfViewerModal.classList.remove("show");
-        setTimeout(() => {
-            pdfViewerModal.style.display = "none";
-            document.getElementById("pdfViewerFrame").src = "";
-        }, 300);
-    }
-}
-
-function showCategoryDetailsModal(category, count) {
-    let categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (!categoryDetailsModal) {
-        categoryDetailsModal = document.createElement("div");
-        categoryDetailsModal.id = "categoryDetailsModal";
-        categoryDetailsModal.className = "category-details-modal-overlay";
-        categoryDetailsModal.innerHTML = `
-            <div class="category-details-modal-content">
-                <div class="category-details-modal-header">
-                    <h3 id="categoryDetailsTitle"></h3>
-                    <button class="category-details-modal-close">&times;</button>
-                </div>
-                <div class="category-details-modal-body">
-                    <p class="category-details-count"></p>
-                    <p class="category-details-description">Aqui você encontraria todos os livros desta categoria organizados por popularidade, data de publicação e avaliação.</p>
-                    <div class="category-details-actions">
-                        <button class="btn-primary">Ver Livros da Categoria</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(categoryDetailsModal);
-        const styles = `
-            <style>
-            .category-details-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 10004; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-            .category-details-modal-overlay.show { opacity: 1; }
-            .category-details-modal-content { background: var(--spotify-gray); border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--spotify-light-gray); display: flex; flex-direction: column; text-align: center; }
-            .category-details-modal-overlay.show .category-details-modal-content { transform: translateY(0); }
-            .category-details-modal-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--spotify-light-gray); }
-            .category-details-modal-header h3 { color: var(--spotify-white); font-size: 24px; margin: 0; flex-grow: 1; text-align: center; }
-            .category-details-modal-close { background: none; border: none; color: var(--spotify-text-gray); font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s ease; }
-            .category-details-modal-close:hover { background: var(--spotify-light-gray); color: var(--spotify-white); }
-            .category-details-modal-body { padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-            .category-details-count { color: var(--spotify-text-gray); font-size: 18px; margin-bottom: 5px; }
-            .category-details-description { color: var(--spotify-white); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-            .category-details-actions .btn-primary { padding: 10px 20px; font-size: 14px; }
-            </style>
-        `;
-        document.head.insertAdjacentHTML("beforeend", styles);
-        categoryDetailsModal.querySelector(".category-details-modal-close").addEventListener("click", hideCategoryDetailsModal);
-        categoryDetailsModal.addEventListener("click", function(e) {
-            if (e.target === categoryDetailsModal) {
-                hideCategoryDetailsModal();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && categoryDetailsModal.style.display !== "none") {
-                hideCategoryDetailsModal();
-            }
-        });
-        categoryDetailsModal.querySelector(".btn-primary").addEventListener("click", function() {
-            showNotification(`📚 Carregando livros da categoria: ${category}`, "info");
-            hideCategoryDetailsModal();
-        });
-    }
-    document.getElementById("categoryDetailsTitle").textContent = `Categoria: ${category}`;
-    document.querySelector(".category-details-count").textContent = count;
-    categoryDetailsModal.style.display = "flex";
-    setTimeout(() => {
-        categoryDetailsModal.classList.add("show");
-    }, 10);
-}
-
-function hideCategoryDetailsModal() {
-    const categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (categoryDetailsModal) {
-        categoryDetailsModal.classList.remove("show");
-        setTimeout(() => {
-            categoryDetailsModal.style.display = "none";
-        }, 300);
-    }
-}
-
-function initializePdfUpload() {
-    const pdfUploadInput = document.getElementById("pdfUploadInput");
-    const uploadPdfButton = document.getElementById("uploadPdfButton");
-    const fileNameDisplay = document.getElementById("fileNameDisplay");
-    const pdfList = document.getElementById("pdfList");
-    const noPdfMessage = document.getElementById("noPdfMessage");
-    let uploadedPdfs = [];
-    if (uploadPdfButton) {
-        uploadPdfButton.addEventListener("click", function() {
-            pdfUploadInput.click();
-        });
-    }
-    if (pdfUploadInput) {
-        pdfUploadInput.addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.type !== "application/pdf") {
-                    showNotification("❌ Por favor, selecione um arquivo PDF.", "error");
-                    fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-                    return;
-                }
-                fileNameDisplay.textContent = `Arquivo selecionado: ${file.name}`;
-                showNotification(`🔄 Preparando para carregar: ${file.name}`, "info");
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const pdfDataUrl = e.target.result;
-                    const newPdf = {
-                        name: file.name,
-                        url: pdfDataUrl,
-                        uploadDate: new Date().toLocaleDateString("pt-BR"),
-                        author: "Você (Usuário Atual)"
-                    };
-                    uploadedPdfs.push(newPdf);
-                    renderPdfList();
-                    showNotification(`✅ PDF '${file.name}' carregado com sucesso!`, "success");
-                };
-                reader.readAsDataURL(file);
-            } else {
-                fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-            }
-        });
-    }
-
-    function renderPdfList() {
-        pdfList.innerHTML = "";
-        if (uploadedPdfs.length === 0) {
-            noPdfMessage.style.display = "block";
-            pdfList.appendChild(noPdfMessage);
-        } else {
-            noPdfMessage.style.display = "none";
-            uploadedPdfs.forEach((pdf, index) => {
-                const pdfCard = document.createElement("div");
-                pdfCard.className = "pdf-card";
-                pdfCard.innerHTML = `
-                    <div class="pdf-thumbnail">📄</div>
-                    <div class="pdf-info">
-                        <h3>${pdf.name}</h3>
-                        <p>por ${pdf.author}</p>
-                        <p>Publicado em: ${pdf.uploadDate}</p>
-                    </div>
-                `;
-                pdfCard.addEventListener("click", () => showPdfViewer(pdf.name, pdf.url));
-                pdfList.appendChild(pdfCard);
-            });
-        }
-    }
-    renderPdfList();
-}
-
-function showPdfViewer(title, pdfUrl) {
-    let pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (!pdfViewerModal) {
-        pdfViewerModal = document.createElement("div");
-        pdfViewerModal.id = "pdfViewerModal";
-        pdfViewerModal.className = "pdf-viewer-modal";
-        pdfViewerModal.innerHTML = `
-            <div class="pdf-viewer-content">
-                <div class="pdf-viewer-header">
-                    <h3 id="pdfViewerTitle"></h3>
-                    <button class="pdf-viewer-close">&times;</button>
-                </div>
-                <div class="pdf-viewer-body">
-                    <iframe id="pdfViewerFrame" src="" frameborder="0"></iframe>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(pdfViewerModal);
-        pdfViewerModal.querySelector(".pdf-viewer-close").addEventListener("click", hidePdfViewer);
-        pdfViewerModal.addEventListener("click", function(e) {
-            if (e.target === pdfViewerModal) {
-                hidePdfViewer();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && pdfViewerModal.style.display !== "none") {
-                hidePdfViewer();
-            }
-        });
-    }
-    document.getElementById("pdfViewerTitle").textContent = title;
-    document.getElementById("pdfViewerFrame").src = pdfUrl;
-    pdfViewerModal.style.display = "flex";
-    setTimeout(() => {
-        pdfViewerModal.classList.add("show");
-    }, 10);
-}
-
-function hidePdfViewer() {
-    const pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (pdfViewerModal) {
-        pdfViewerModal.classList.remove("show");
-        setTimeout(() => {
-            pdfViewerModal.style.display = "none";
-            document.getElementById("pdfViewerFrame").src = "";
-        }, 300);
-    }
-}
-
-function showCategoryDetailsModal(category, count) {
-    let categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (!categoryDetailsModal) {
-        categoryDetailsModal = document.createElement("div");
-        categoryDetailsModal.id = "categoryDetailsModal";
-        categoryDetailsModal.className = "category-details-modal-overlay";
-        categoryDetailsModal.innerHTML = `
-            <div class="category-details-modal-content">
-                <div class="category-details-modal-header">
-                    <h3 id="categoryDetailsTitle"></h3>
-                    <button class="category-details-modal-close">&times;</button>
-                </div>
-                <div class="category-details-modal-body">
-                    <p class="category-details-count"></p>
-                    <p class="category-details-description">Aqui você encontraria todos os livros desta categoria organizados por popularidade, data de publicação e avaliação.</p>
-                    <div class="category-details-actions">
-                        <button class="btn-primary">Ver Livros da Categoria</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(categoryDetailsModal);
-        const styles = `
-            <style>
-            .category-details-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 10004; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-            .category-details-modal-overlay.show { opacity: 1; }
-            .category-details-modal-content { background: var(--spotify-gray); border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--spotify-light-gray); display: flex; flex-direction: column; text-align: center; }
-            .category-details-modal-overlay.show .category-details-modal-content { transform: translateY(0); }
-            .category-details-modal-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--spotify-light-gray); }
-            .category-details-modal-header h3 { color: var(--spotify-white); font-size: 24px; margin: 0; flex-grow: 1; text-align: center; }
-            .category-details-modal-close { background: none; border: none; color: var(--spotify-text-gray); font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s ease; }
-            .category-details-modal-close:hover { background: var(--spotify-light-gray); color: var(--spotify-white); }
-            .category-details-modal-body { padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-            .category-details-count { color: var(--spotify-text-gray); font-size: 18px; margin-bottom: 5px; }
-            .category-details-description { color: var(--spotify-white); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-            .category-details-actions .btn-primary { padding: 10px 20px; font-size: 14px; }
-            </style>
-        `;
-        document.head.insertAdjacentHTML("beforeend", styles);
-        categoryDetailsModal.querySelector(".category-details-modal-close").addEventListener("click", hideCategoryDetailsModal);
-        categoryDetailsModal.addEventListener("click", function(e) {
-            if (e.target === categoryDetailsModal) {
-                hideCategoryDetailsModal();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && categoryDetailsModal.style.display !== "none") {
-                hideCategoryDetailsModal();
-            }
-        });
-        categoryDetailsModal.querySelector(".btn-primary").addEventListener("click", function() {
-            showNotification(`📚 Carregando livros da categoria: ${category}`, "info");
-            hideCategoryDetailsModal();
-        });
-    }
-    document.getElementById("categoryDetailsTitle").textContent = `Categoria: ${category}`;
-    document.querySelector(".category-details-count").textContent = count;
-    categoryDetailsModal.style.display = "flex";
-    setTimeout(() => {
-        categoryDetailsModal.classList.add("show");
-    }, 10);
-}
-
-function hideCategoryDetailsModal() {
-    const categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (categoryDetailsModal) {
-        categoryDetailsModal.classList.remove("show");
-        setTimeout(() => {
-            categoryDetailsModal.style.display = "none";
-        }, 300);
-    }
-}
-
-function initializePdfUpload() {
-    const pdfUploadInput = document.getElementById("pdfUploadInput");
-    const uploadPdfButton = document.getElementById("uploadPdfButton");
-    const fileNameDisplay = document.getElementById("fileNameDisplay");
-    const pdfList = document.getElementById("pdfList");
-    const noPdfMessage = document.getElementById("noPdfMessage");
-    let uploadedPdfs = [];
-    if (uploadPdfButton) {
-        uploadPdfButton.addEventListener("click", function() {
-            pdfUploadInput.click();
-        });
-    }
-    if (pdfUploadInput) {
-        pdfUploadInput.addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.type !== "application/pdf") {
-                    showNotification("❌ Por favor, selecione um arquivo PDF.", "error");
-                    fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-                    return;
-                }
-                fileNameDisplay.textContent = `Arquivo selecionado: ${file.name}`;
-                showNotification(`🔄 Preparando para carregar: ${file.name}`, "info");
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const pdfDataUrl = e.target.result;
-                    const newPdf = {
-                        name: file.name,
-                        url: pdfDataUrl,
-                        uploadDate: new Date().toLocaleDateString("pt-BR"),
-                        author: "Você (Usuário Atual)"
-                    };
-                    uploadedPdfs.push(newPdf);
-                    renderPdfList();
-                    showNotification(`✅ PDF '${file.name}' carregado com sucesso!`, "success");
-                };
-                reader.readAsDataURL(file);
-            } else {
-                fileNameDisplay.textContent = "Nenhum arquivo selecionado";
-            }
-        });
-    }
-
-    function renderPdfList() {
-        pdfList.innerHTML = "";
-        if (uploadedPdfs.length === 0) {
-            noPdfMessage.style.display = "block";
-            pdfList.appendChild(noPdfMessage);
-        } else {
-            noPdfMessage.style.display = "none";
-            uploadedPdfs.forEach((pdf, index) => {
-                const pdfCard = document.createElement("div");
-                pdfCard.className = "pdf-card";
-                pdfCard.innerHTML = `
-                    <div class="pdf-thumbnail">📄</div>
-                    <div class="pdf-info">
-                        <h3>${pdf.name}</h3>
-                        <p>por ${pdf.author}</p>
-                        <p>Publicado em: ${pdf.uploadDate}</p>
-                    </div>
-                `;
-                pdfCard.addEventListener("click", () => showPdfViewer(pdf.name, pdf.url));
-                pdfList.appendChild(pdfCard);
-            });
-        }
-    }
-    renderPdfList();
-}
-
-function showPdfViewer(title, pdfUrl) {
-    let pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (!pdfViewerModal) {
-        pdfViewerModal = document.createElement("div");
-        pdfViewerModal.id = "pdfViewerModal";
-        pdfViewerModal.className = "pdf-viewer-modal";
-        pdfViewerModal.innerHTML = `
-            <div class="pdf-viewer-content">
-                <div class="pdf-viewer-header">
-                    <h3 id="pdfViewerTitle"></h3>
-                    <button class="pdf-viewer-close">&times;</button>
-                </div>
-                <div class="pdf-viewer-body">
-                    <iframe id="pdfViewerFrame" src="" frameborder="0"></iframe>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(pdfViewerModal);
-        pdfViewerModal.querySelector(".pdf-viewer-close").addEventListener("click", hidePdfViewer);
-        pdfViewerModal.addEventListener("click", function(e) {
-            if (e.target === pdfViewerModal) {
-                hidePdfViewer();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && pdfViewerModal.style.display !== "none") {
-                hidePdfViewer();
-            }
-        });
-    }
-    document.getElementById("pdfViewerTitle").textContent = title;
-    document.getElementById("pdfViewerFrame").src = pdfUrl;
-    pdfViewerModal.style.display = "flex";
-    setTimeout(() => {
-        pdfViewerModal.classList.add("show");
-    }, 10);
-}
-
-function hidePdfViewer() {
-    const pdfViewerModal = document.getElementById("pdfViewerModal");
-    if (pdfViewerModal) {
-        pdfViewerModal.classList.remove("show");
-        setTimeout(() => {
-            pdfViewerModal.style.display = "none";
-            document.getElementById("pdfViewerFrame").src = "";
-        }, 300);
-    }
-}
-
-function showCategoryDetailsModal(category, count) {
-    let categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (!categoryDetailsModal) {
-        categoryDetailsModal = document.createElement("div");
-        categoryDetailsModal.id = "categoryDetailsModal";
-        categoryDetailsModal.className = "category-details-modal-overlay";
-        categoryDetailsModal.innerHTML = `
-            <div class="category-details-modal-content">
-                <div class="category-details-modal-header">
-                    <h3 id="categoryDetailsTitle"></h3>
-                    <button class="category-details-modal-close">&times;</button>
-                </div>
-                <div class="category-details-modal-body">
-                    <p class="category-details-count"></p>
-                    <p class="category-details-description">Aqui você encontraria todos os livros desta categoria organizados por popularidade, data de publicação e avaliação.</p>
-                    <div class="category-details-actions">
-                        <button class="btn-primary">Ver Livros da Categoria</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(categoryDetailsModal);
-        const styles = `
-            <style>
-            .category-details-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 10004; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-            .category-details-modal-overlay.show { opacity: 1; }
-            .category-details-modal-content { background: var(--spotify-gray); border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--spotify-light-gray); display: flex; flex-direction: column; text-align: center; }
-            .category-details-modal-overlay.show .category-details-modal-content { transform: translateY(0); }
-            .category-details-modal-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--spotify-light-gray); }
-            .category-details-modal-header h3 { color: var(--spotify-white); font-size: 24px; margin: 0; flex-grow: 1; text-align: center; }
-            .category-details-modal-close { background: none; border: none; color: var(--spotify-text-gray); font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s ease; }
-            .category-details-modal-close:hover { background: var(--spotify-light-gray); color: var(--spotify-white); }
-            .category-details-modal-body { padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-            .category-details-count { color: var(--spotify-text-gray); font-size: 18px; margin-bottom: 5px; }
-            .category-details-description { color: var(--spotify-white); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-            .category-details-actions .btn-primary { padding: 10px 20px; font-size: 14px; }
-            </style>
-        `;
-        document.head.insertAdjacentHTML("beforeend", styles);
-        categoryDetailsModal.querySelector(".category-details-modal-close").addEventListener("click", hideCategoryDetailsModal);
-        categoryDetailsModal.addEventListener("click", function(e) {
-            if (e.target === categoryDetailsModal) {
-                hideCategoryDetailsModal();
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape" && categoryDetailsModal.style.display !== "none") {
-                hideCategoryDetailsModal();
-            }
-        });
-        categoryDetailsModal.querySelector(".btn-primary").addEventListener("click", function() {
-            showNotification(`📚 Carregando livros da categoria: ${category}`, "info");
-            hideCategoryDetailsModal();
-        });
-    }
-    document.getElementById("categoryDetailsTitle").textContent = `Categoria: ${category}`;
-    document.querySelector(".category-details-count").textContent = count;
-    categoryDetailsModal.style.display = "flex";
-    setTimeout(() => {
-        categoryDetailsModal.classList.add("show");
-    }, 10);
-}
-
-function hideCategoryDetailsModal() {
-    const categoryDetailsModal = document.getElementById("categoryDetailsModal");
-    if (categoryDetailsModal) {
-        categoryDetailsModal.classList.remove("show");
-        setTimeout(() => {
-            categoryDetailsModal.style.display = "none";
-        }, 300);
-    }
+    const categoryDetailsModal = document.getElementById('categoryDetailsModal');
+    if (!categoryDetailsModal) return;
+    categoryDetailsModal.classList.remove('show');
+    setTimeout(() => { categoryDetailsModal.style.display = 'none'; }, 300);
 }
 

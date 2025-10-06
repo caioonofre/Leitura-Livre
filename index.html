@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leitura Livre - Sua plataforma para criar e descobrir literatura</title>
     <link rel="stylesheet" href="./style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header">
@@ -29,6 +29,15 @@
             </div>
         </div>
     </header>
+
+    <!-- Barra de busca global (usada por script.js: searchBar/searchInput/closeSearch) -->
+    <div id="searchBar" class="search-bar" role="search" aria-hidden="true">
+        <div class="container">
+            <input id="searchInput" type="search" placeholder="Busque por livros, autores ou categorias" aria-label="Pesquisar no site">
+            <button id="closeSearch" class="btn-icon" type="button" aria-label="Fechar busca">&times;</button>
+        </div>
+        <ul id="searchSuggestions" class="search-suggestions" aria-live="polite"></ul>
+    </div>
 
     <main>
         <section class="hero">
@@ -178,17 +187,6 @@
                             <span class="time">1 dia atrás</span>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="cta-section">
-            <div class="container">
-                <h2>Pronto para Compartilhar Sua História?</h2>
-                <p>Junte-se a milhares de autores que já descobriram a liberdade de publicar sem barreiras.</p>
-                <div class="cta-buttons">
-                    <button class="btn-cta">Criar Minha Conta</button>
-                    <button class="btn-outline">Conhecer a Comunidade</button>
                 </div>
             </div>
         </section>
