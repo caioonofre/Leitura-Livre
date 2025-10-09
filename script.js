@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log('🚀 Leitura Livre carregado com sucesso!');
     initializeNavigation();
     initializeButtons();
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeNavigation() {
     const navLinks = document.querySelectorAll('.nav a[href^="#"]');
     navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href').substring(1);
             const targetElement = document.getElementById(targetId);
@@ -22,7 +22,7 @@ function initializeNavigation() {
             }
         });
     });
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         const header = document.querySelector('.header');
         if (!header) return;
         header.style.background = window.scrollY > 100 ? 'rgba(18, 18, 18, 0.98)' : 'rgba(18, 18, 18, 0.95)';
@@ -32,7 +32,7 @@ function initializeNavigation() {
 function initializeButtons() {
     const btnStartWriting = document.querySelector('.hero .btn-cta');
     if (btnStartWriting) {
-        btnStartWriting.addEventListener('click', function() {
+        btnStartWriting.addEventListener('click', function () {
             showNotification('⬆️ Abrindo seletor de arquivos para upload de PDF...', 'info');
             setTimeout(() => {
                 const pdfUploadInput = document.getElementById('pdfUploadInput');
@@ -46,7 +46,7 @@ function initializeButtons() {
     }
     const btnExploreBooks = document.querySelector('.hero .btn-outline');
     if (btnExploreBooks) {
-        btnExploreBooks.addEventListener('click', function() {
+        btnExploreBooks.addEventListener('click', function () {
             showNotification('📚 Explorando nossa biblioteca...', 'info');
             setTimeout(() => {
                 const target = document.getElementById('popular-books');
@@ -55,35 +55,35 @@ function initializeButtons() {
         });
     }
     const btnCreateAccount = document.querySelector('.cta-section .btn-cta');
-    btnCreateAccount && btnCreateAccount.addEventListener('click', function() {
-            showLoginModal('Crie sua conta gratuita e comece a publicar hoje mesmo!', 'register');
-        });
+    btnCreateAccount && btnCreateAccount.addEventListener('click', function () {
+        showLoginModal('Crie sua conta gratuita e comece a publicar hoje mesmo!', 'register');
+    });
     const btnKnowCommunity = document.querySelector('.cta-section .btn-outline');
-    btnKnowCommunity && btnKnowCommunity.addEventListener('click', function() {
-            showNotification('🌟 Carregando página da comunidade...', 'info');
-            setTimeout(() => {
-                alert('Bem-vindo à nossa comunidade!\n\n• Mais de 50.000 autores ativos\n• Milhares de livros publicados\n• Comunidade acolhedora e colaborativa\n• Ferramentas gratuitas de publicação');
-            }, 800);
-        });
+    btnKnowCommunity && btnKnowCommunity.addEventListener('click', function () {
+        showNotification('🌟 Carregando página da comunidade...', 'info');
+        setTimeout(() => {
+            alert('Bem-vindo à nossa comunidade!\n\n• Mais de 50.000 autores ativos\n• Milhares de livros publicados\n• Comunidade acolhedora e colaborativa\n• Ferramentas gratuitas de publicação');
+        }, 800);
+    });
     const btnSeeAll = document.querySelector('.recent-books .btn-outline');
-    btnSeeAll && btnSeeAll.addEventListener('click', function() {
-            showNotification('📖 Carregando todas as publicações...', 'info');
-            setTimeout(() => {
-                alert('Aqui você encontraria todas as últimas publicações da plataforma, organizadas por data e categoria.');
-            }, 800);
-        });
+    btnSeeAll && btnSeeAll.addEventListener('click', function () {
+        showNotification('📖 Carregando todas as publicações...', 'info');
+        setTimeout(() => {
+            alert('Aqui você encontraria todas as últimas publicações da plataforma, organizadas por data e categoria.');
+        }, 800);
+    });
     const btnSupport = document.querySelector('.btn-primary');
-    btnSupport && btnSupport.addEventListener('click', function() { showSupportModal(); });
+    btnSupport && btnSupport.addEventListener('click', function () { showSupportModal(); });
     const btnSearch = document.querySelector('.btn-icon');
-    btnSearch && btnSearch.addEventListener('click', function() { toggleSearchBar(); });
+    btnSearch && btnSearch.addEventListener('click', function () { toggleSearchBar(); });
     const btnUser = document.querySelectorAll('.btn-icon')[1];
-    btnUser && btnUser.addEventListener('click', function() { showLoginModal('Acesse sua conta ou crie uma nova para continuar.'); });
+    btnUser && btnUser.addEventListener('click', function () { showLoginModal('Acesse sua conta ou crie uma nova para continuar.'); });
 }
 
 function initializeFilters() {
     const filterButtons = document.querySelectorAll('.btn-filter');
     filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             filterButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             const period = this.textContent.toLowerCase();
@@ -96,7 +96,7 @@ function initializeFilters() {
 function initializeCards() {
     const bookCards = document.querySelectorAll('.book-card');
     bookCards.forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const title = this.querySelector('h3').textContent;
             const author = this.querySelector('p').textContent;
             showBookModal(title, author);
@@ -104,7 +104,7 @@ function initializeCards() {
     });
     const categoryCards = document.querySelectorAll('.category-card');
     categoryCards.forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const category = this.querySelector('h3').textContent;
             const count = this.querySelector('p').textContent;
             showNotification(`📚 Explorando categoria: ${category}`, 'info');
@@ -113,7 +113,7 @@ function initializeCards() {
     });
     const recentCards = document.querySelectorAll('.recent-card');
     recentCards.forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const title = this.querySelector('h3').textContent;
             const author = this.querySelector('p').textContent;
             showBookModal(title, author, true);
@@ -203,11 +203,11 @@ function addModalEvents() {
     const loginForm = document.getElementById('loginForm');
     const switchToRegister = document.getElementById('switchToRegister');
     closeBtn.addEventListener('click', hideLoginModal);
-    modal.addEventListener('click', function(e) { if (e.target === modal) hideLoginModal(); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modal.style.display !== 'none') hideLoginModal(); });
-    loginForm.addEventListener('submit', function(e) { e.preventDefault(); handleLogin(); });
-    switchToRegister.addEventListener('click', function(e) { e.preventDefault(); switchToRegisterMode(); });
-    modal.querySelector('.forgot-password').addEventListener('click', function(e) { e.preventDefault(); showNotification('📧 Link de recuperação enviado para seu e-mail!', 'success'); });
+    modal.addEventListener('click', function (e) { if (e.target === modal) hideLoginModal(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.style.display !== 'none') hideLoginModal(); });
+    loginForm.addEventListener('submit', function (e) { e.preventDefault(); handleLogin(); });
+    switchToRegister.addEventListener('click', function (e) { e.preventDefault(); switchToRegisterMode(); });
+    modal.querySelector('.forgot-password').addEventListener('click', function (e) { e.preventDefault(); showNotification('📧 Link de recuperação enviado para seu e-mail!', 'success'); });
 }
 
 function showLoginModal(message = '', mode = 'login') {
@@ -221,12 +221,12 @@ function showLoginModal(message = '', mode = 'login') {
         modalTitle.textContent = 'Criar Conta Gratuita';
         loginButton.textContent = 'Cadastrar';
         switchLink.innerHTML = 'Já tem uma conta? <a href="#" id="switchToLogin">Faça login</a>';
-        document.getElementById('switchToLogin').addEventListener('click', function(e) { e.preventDefault(); switchToLoginMode(); });
+        document.getElementById('switchToLogin').addEventListener('click', function (e) { e.preventDefault(); switchToLoginMode(); });
     } else {
         modalTitle.textContent = 'Entrar na Leitura Livre';
         loginButton.textContent = 'Entrar';
         switchLink.innerHTML = 'Não tem uma conta? <a href="#" id="switchToRegister">Cadastre-se gratuitamente</a>';
-        document.getElementById('switchToRegister').addEventListener('click', function(e) { e.preventDefault(); switchToRegisterMode(); });
+        document.getElementById('switchToRegister').addEventListener('click', function (e) { e.preventDefault(); switchToRegisterMode(); });
     }
     modal.style.display = 'flex';
     setTimeout(() => { modal.classList.add('show'); }, 10);
@@ -257,7 +257,7 @@ function initializeSearch() {
     const closeSearch = document.getElementById('closeSearch');
     closeSearch && closeSearch.addEventListener('click', toggleSearchBar);
     if (searchInput) {
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
             const query = this.value.toLowerCase();
             const suggestions = ['Romance', 'Ficção Científica', 'Fantasia', 'Suspense', 'Aventura', 'Biografia', 'História', 'Poesia'];
             const filteredSuggestions = suggestions.filter(s => s.toLowerCase().includes(query));
@@ -269,8 +269,8 @@ function initializeSearch() {
 function toggleSearchBar() {
     const searchBar = document.getElementById('searchBar');
     if (!searchBar) return;
-        searchBar.classList.toggle('show');
-        if (searchBar.classList.contains('show')) {
+    searchBar.classList.toggle('show');
+    if (searchBar.classList.contains('show')) {
         const input = document.getElementById('searchInput');
         input && input.focus();
     }
@@ -279,29 +279,29 @@ function toggleSearchBar() {
 function updateSearchSuggestions(suggestions) {
     const suggestionsContainer = document.getElementById('searchSuggestions');
     if (!suggestionsContainer) return;
-        suggestionsContainer.innerHTML = '';
-        if (suggestions.length > 0) {
-            suggestions.forEach(suggestion => {
-                const li = document.createElement('li');
-                li.textContent = suggestion;
-                li.addEventListener('click', () => {
+    suggestionsContainer.innerHTML = '';
+    if (suggestions.length > 0) {
+        suggestions.forEach(suggestion => {
+            const li = document.createElement('li');
+            li.textContent = suggestion;
+            li.addEventListener('click', () => {
                 const input = document.getElementById('searchInput');
                 if (input) input.value = suggestion;
-                    suggestionsContainer.innerHTML = '';
-                    showNotification(`🔍 Buscando por: ${suggestion}`, 'info');
-                });
-                suggestionsContainer.appendChild(li);
+                suggestionsContainer.innerHTML = '';
+                showNotification(`🔍 Buscando por: ${suggestion}`, 'info');
             });
+            suggestionsContainer.appendChild(li);
+        });
     }
 }
 
 function initializeScrollEffects() {
     const parallax = document.querySelector('.hero');
     if (!parallax) return;
-        window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         const offset = window.pageYOffset;
-            parallax.style.backgroundPositionY = offset * 0.7 + 'px';
-        });
+        parallax.style.backgroundPositionY = offset * 0.7 + 'px';
+    });
 
     // Cursor-follow glow for hero title
     const heroTitle = document.querySelector('.hero h2');
@@ -461,10 +461,10 @@ function showBookModal(title, author, isRecent = false) {
             </style>`;
         document.head.insertAdjacentHTML('beforeend', styles);
         bookDetailsModal.querySelector('.book-details-modal-close').addEventListener('click', hideBookDetailsModal);
-        bookDetailsModal.addEventListener('click', function(e) { if (e.target === bookDetailsModal) hideBookDetailsModal(); });
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && bookDetailsModal.style.display !== 'none') hideBookDetailsModal(); });
-        bookDetailsModal.querySelector('.btn-primary').addEventListener('click', function() { showNotification(`📖 Lendo o livro: ${title}`, 'info'); hideBookDetailsModal(); });
-        bookDetailsModal.querySelector('.btn-outline').addEventListener('click', function() { showNotification(`❤️ Livro '${title}' adicionado aos favoritos!`, 'success'); });
+        bookDetailsModal.addEventListener('click', function (e) { if (e.target === bookDetailsModal) hideBookDetailsModal(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && bookDetailsModal.style.display !== 'none') hideBookDetailsModal(); });
+        bookDetailsModal.querySelector('.btn-primary').addEventListener('click', function () { showNotification(`📖 Lendo o livro: ${title}`, 'info'); hideBookDetailsModal(); });
+        bookDetailsModal.querySelector('.btn-outline').addEventListener('click', function () { showNotification(`❤️ Livro '${title}' adicionado aos favoritos!`, 'success'); });
     }
     document.getElementById('bookDetailsTitle').textContent = title;
     document.querySelector('.book-details-author').textContent = author;
@@ -494,9 +494,9 @@ function initializePdfUpload() {
     const pdfList = document.getElementById('pdfList');
     const noPdfMessage = document.getElementById('noPdfMessage');
     let uploadedPdfs = [];
-    uploadPdfButton && uploadPdfButton.addEventListener('click', function() { pdfUploadInput && pdfUploadInput.click(); });
+    uploadPdfButton && uploadPdfButton.addEventListener('click', function () { pdfUploadInput && pdfUploadInput.click(); });
     if (pdfUploadInput) {
-        pdfUploadInput.addEventListener('change', function(event) {
+        pdfUploadInput.addEventListener('change', function (event) {
             const file = event.target.files[0];
             if (file) {
                 if (file.type !== 'application/pdf') {
@@ -507,7 +507,7 @@ function initializePdfUpload() {
                 fileNameDisplay && (fileNameDisplay.textContent = `Arquivo selecionado: ${file.name}`);
                 showNotification(`🔄 Preparando para carregar: ${file.name}`, 'info');
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const pdfDataUrl = e.target.result;
                     const newPdf = { name: file.name, url: pdfDataUrl, uploadDate: new Date().toLocaleDateString('pt-BR'), author: 'Você (Usuário Atual)' };
                     uploadedPdfs.push(newPdf);
@@ -564,8 +564,8 @@ function showPdfViewer(title, pdfUrl) {
             </div>`;
         document.body.appendChild(pdfViewerModal);
         pdfViewerModal.querySelector('.pdf-viewer-close').addEventListener('click', hidePdfViewer);
-        pdfViewerModal.addEventListener('click', function(e) { if (e.target === pdfViewerModal) hidePdfViewer(); });
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && pdfViewerModal.style.display !== 'none') hidePdfViewer(); });
+        pdfViewerModal.addEventListener('click', function (e) { if (e.target === pdfViewerModal) hidePdfViewer(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && pdfViewerModal.style.display !== 'none') hidePdfViewer(); });
     }
     document.getElementById('pdfViewerTitle').textContent = title;
     document.getElementById('pdfViewerFrame').src = pdfUrl;
@@ -577,11 +577,11 @@ function hidePdfViewer() {
     const pdfViewerModal = document.getElementById('pdfViewerModal');
     if (!pdfViewerModal) return;
     pdfViewerModal.classList.remove('show');
-        setTimeout(() => {
+    setTimeout(() => {
         pdfViewerModal.style.display = 'none';
         const frame = document.getElementById('pdfViewerFrame');
         if (frame) frame.src = '';
-        }, 300);
+    }, 300);
 }
 
 function showCategoryDetailsModal(category, count) {
@@ -622,9 +622,9 @@ function showCategoryDetailsModal(category, count) {
             </style>`;
         document.head.insertAdjacentHTML('beforeend', styles);
         categoryDetailsModal.querySelector('.category-details-modal-close').addEventListener('click', hideCategoryDetailsModal);
-        categoryDetailsModal.addEventListener('click', function(e) { if (e.target === categoryDetailsModal) hideCategoryDetailsModal(); });
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && categoryDetailsModal.style.display !== 'none') hideCategoryDetailsModal(); });
-        categoryDetailsModal.querySelector('.btn-primary').addEventListener('click', function() { showNotification(`📚 Carregando livros da categoria: ${category}`, 'info'); hideCategoryDetailsModal(); });
+        categoryDetailsModal.addEventListener('click', function (e) { if (e.target === categoryDetailsModal) hideCategoryDetailsModal(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && categoryDetailsModal.style.display !== 'none') hideCategoryDetailsModal(); });
+        categoryDetailsModal.querySelector('.btn-primary').addEventListener('click', function () { showNotification(`📚 Carregando livros da categoria: ${category}`, 'info'); hideCategoryDetailsModal(); });
     }
     document.getElementById('categoryDetailsTitle').textContent = `Categoria: ${category}`;
     document.querySelector('.category-details-count').textContent = count;
@@ -637,5 +637,20 @@ function hideCategoryDetailsModal() {
     if (!categoryDetailsModal) return;
     categoryDetailsModal.classList.remove('show');
     setTimeout(() => { categoryDetailsModal.style.display = 'none'; }, 300);
+}
+
+
+function abrirDoisLinks() {
+
+    const url1 = "https://www.instagram.com/miguelcampos.zz/";
+    const url2 = "https://www.instagram.com/caioonofre/";
+
+    
+    window.open(url1, '_blank');
+
+   
+    window.open(url2, '_blank');
+
+    return false;
 }
 
