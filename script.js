@@ -72,11 +72,11 @@ function initializeButtons() {
             alert('Aqui você encontraria todas as últimas publicações da plataforma, organizadas por data e categoria.');
         }, 800);
     });
-    const btnSupport = document.querySelector('.btn-primary');
+    const btnSupport = document.querySelector('.actions .btn-primary');
     btnSupport && btnSupport.addEventListener('click', function () { showSupportModal(); });
-    const btnSearch = document.querySelector('.btn-icon');
+    const btnSearch = document.querySelector('.actions .btn-icon');
     btnSearch && btnSearch.addEventListener('click', function () { toggleSearchBar(); });
-    const btnUser = document.querySelectorAll('.btn-icon')[1];
+    const btnUser = document.querySelectorAll('.actions .btn-icon')[1];
     btnUser && btnUser.addEventListener('click', function () { showLoginModal('Acesse sua conta ou crie uma nova para continuar.'); });
 }
 
@@ -327,14 +327,10 @@ function initializeScrollEffects() {
         const y = ((e.clientY - rect.top) / rect.height) * 100;
         parallax.style.setProperty('--mx', x + '%');
         parallax.style.setProperty('--my', y + '%');
-        // reverted to circular glow: no rotation/radius deformation
     });
     parallax.addEventListener('mouseleave', () => {
         parallax.style.removeProperty('--mx');
         parallax.style.removeProperty('--my');
-        parallax.style.removeProperty('--rot');
-        parallax.style.removeProperty('--rx');
-        parallax.style.removeProperty('--ry');
     });
 }
 
@@ -422,19 +418,19 @@ function showBookModal(title, author, isRecent = false) {
         bookDetailsModal.id = 'bookDetailsModal';
         bookDetailsModal.className = 'book-details-modal-overlay';
         bookDetailsModal.innerHTML = `
-            <div class=\"book-details-modal-content\">
-                <div class=\"book-details-modal-header\">
-                    <h3 id=\"bookDetailsTitle\"></h3>
-                    <button class=\"book-details-modal-close\">&times;</button>
+            <div class="book-details-modal-content">
+                <div class="book-details-modal-header">
+                    <h3 id="bookDetailsTitle"></h3>
+                    <button class="book-details-modal-close">&times;</button>
                 </div>
-                <div class=\"book-details-modal-body\">
-                    <img id=\"bookDetailsCover\" src=\"\" alt=\"Capa do Livro\" class=\"book-details-cover\">
-                    <div class=\"book-details-text\">
-                        <p class=\"book-details-author\"></p>
-                        <p class=\"book-details-description\" id=\"bookDetailsDescription\"></p>
-                        <div class=\"book-details-actions\">
-                            <button class=\"btn-primary\">Ler Livro</button>
-                            <button class=\"btn-outline\">Adicionar aos Favoritos</button>
+                <div class="book-details-modal-body">
+                    <img id="bookDetailsCover" src="" alt="Capa do Livro" class="book-details-cover">
+                    <div class="book-details-text">
+                        <p class="book-details-author"></p>
+                        <p class="book-details-description" id="bookDetailsDescription"></p>
+                        <div class="book-details-actions">
+                            <button class="btn-primary">Ler Livro</button>
+                            <button class="btn-outline">Adicionar aos Favoritos</button>
                         </div>
                     </div>
                 </div>
@@ -468,8 +464,9 @@ function showBookModal(title, author, isRecent = false) {
     }
     document.getElementById('bookDetailsTitle').textContent = title;
     document.querySelector('.book-details-author').textContent = author;
-    document.getElementById('bookDetailsDescription').textContent = '';
-    const randomCover = `https://picsum.photos/seed/${Math.floor(Math.random() * 1000)}/180/270`;
+    // Adicionando uma descrição de exemplo
+    document.getElementById('bookDetailsDescription').textContent = `Esta é a descrição do livro "${title}". Em uma versão estática, esta informação seria fixa ou viria de um banco de dados local. O livro é uma obra de ${isRecent ? 'recente publicação' : 'grande sucesso'} no gênero de ${isRecent ? 'Poesia' : 'Ficção Científica'}.`;
+    const randomCover = `https://picsum.photos/seed/${title.replace(/\s/g, '')}/180/270`;
     document.getElementById('bookDetailsCover').src = randomCover;
     bookDetailsModal.style.display = 'flex';
     setTimeout(() => { bookDetailsModal.classList.add('show'); }, 10);
@@ -521,19 +518,21 @@ function initializePdfUpload() {
         });
     }
     function renderPdfList() {
-        if (!pdfList) return;
+        if (!pdfList || !noPdfMessage) return;
         pdfList.innerHTML = '';
         if (uploadedPdfs.length === 0) {
-            noPdfMessage.style.display = 'block';
-            pdfList.appendChild(noPdfMessage);
+            if (noPdfMessage) {
+                noPdfMessage.style.display = 'block';
+                pdfList.appendChild(noPdfMessage);
+            }
         } else {
-            noPdfMessage.style.display = 'none';
+            if (noPdfMessage) noPdfMessage.style.display = 'none';
             uploadedPdfs.forEach((pdf) => {
                 const pdfCard = document.createElement('div');
                 pdfCard.className = 'pdf-card';
                 pdfCard.innerHTML = `
-                    <div class=\"pdf-thumbnail\">📄</div>
-                    <div class=\"pdf-info\">
+                    <div class="pdf-thumbnail">📄</div>
+                    <div class="pdf-info">
                         <h3>${pdf.name}</h3>
                         <p>por ${pdf.author}</p>
                         <p>Publicado em: ${pdf.uploadDate}</p>
@@ -553,16 +552,28 @@ function showPdfViewer(title, pdfUrl) {
         pdfViewerModal.id = 'pdfViewerModal';
         pdfViewerModal.className = 'pdf-viewer-modal';
         pdfViewerModal.innerHTML = `
-            <div class=\"pdf-viewer-content\">
-                <div class=\"pdf-viewer-header\">
-                    <h3 id=\"pdfViewerTitle\"></h3>
-                    <button class=\"pdf-viewer-close\">&times;</button>
+            <div class="pdf-viewer-content">
+                <div class="pdf-viewer-header">
+                    <h3 id="pdfViewerTitle"></h3>
+                    <button class="pdf-viewer-close">&times;</button>
                 </div>
-                <div class=\"pdf-viewer-body\">
-                    <iframe id=\"pdfViewerFrame\" src=\"\" frameborder=\"0\"></iframe>
+                <div class="pdf-viewer-body">
+                    <iframe id="pdfViewerFrame" src="" frameborder="0"></iframe>
                 </div>
             </div>`;
         document.body.appendChild(pdfViewerModal);
+        const styles = `
+            <style>
+            .pdf-viewer-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 10004; display: none; align-items: center; justify-content: center; }
+            .pdf-viewer-content { background: var(--spotify-gray); border-radius: 16px; width: 90%; max-width: 1000px; height: 90%; display: flex; flex-direction: column; }
+            .pdf-viewer-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--spotify-light-gray); }
+            .pdf-viewer-header h3 { color: var(--spotify-white); margin: 0; font-size: 20px; }
+            .pdf-viewer-close { background: none; border: none; color: var(--spotify-text-gray); font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s ease; }
+            .pdf-viewer-close:hover { background: var(--spotify-light-gray); color: var(--spotify-white); }
+            .pdf-viewer-body { flex-grow: 1; }
+            #pdfViewerFrame { width: 100%; height: 100%; border: none; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; }
+            </style>`;
+        document.head.insertAdjacentHTML('beforeend', styles);
         pdfViewerModal.querySelector('.pdf-viewer-close').addEventListener('click', hidePdfViewer);
         pdfViewerModal.addEventListener('click', function (e) { if (e.target === pdfViewerModal) hidePdfViewer(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && pdfViewerModal.style.display !== 'none') hidePdfViewer(); });
@@ -591,16 +602,16 @@ function showCategoryDetailsModal(category, count) {
         categoryDetailsModal.id = 'categoryDetailsModal';
         categoryDetailsModal.className = 'category-details-modal-overlay';
         categoryDetailsModal.innerHTML = `
-            <div class=\"category-details-modal-content\">
-                <div class=\"category-details-modal-header\">
-                    <h3 id=\"categoryDetailsTitle\"></h3>
-                    <button class=\"category-details-modal-close\">&times;</button>
+            <div class="category-details-modal-content">
+                <div class="category-details-modal-header">
+                    <h3 id="categoryDetailsTitle"></h3>
+                    <button class="category-details-modal-close">&times;</button>
                 </div>
-                <div class=\"category-details-modal-body\">
-                    <p class=\"category-details-count\"></p>
-                    <p class=\"category-details-description\">Aqui você encontraria todos os livros desta categoria organizados por popularidade, data de publicação e avaliação.</p>
-                    <div class=\"category-details-actions\">
-                        <button class=\"btn-primary\">Ver Livros da Categoria</button>
+                <div class="category-details-modal-body">
+                    <p class="category-details-count"></p>
+                    <p class="category-details-description">Aqui você encontraria todos os livros desta categoria organizados por popularidade, data de publicação e avaliação.</p>
+                    <div class="category-details-actions">
+                        <button class="btn-primary">Ver Livros da Categoria</button>
                     </div>
                 </div>
             </div>`;
@@ -609,7 +620,7 @@ function showCategoryDetailsModal(category, count) {
             <style>
             .category-details-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 10004; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
             .category-details-modal-overlay.show { opacity: 1; }
-            .category-details-modal-content { background: var(--spotify-gray); border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--spotify-light-gray); display: flex; flex-direction: column; text-align: center; }
+            .category-details-modal-content { background: var(--spotify-gray); border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--spotify-light-gray); display: flex; flex-direction: column; }
             .category-details-modal-overlay.show .category-details-modal-content { transform: translateY(0); }
             .category-details-modal-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--spotify-light-gray); }
             .category-details-modal-header h3 { color: var(--spotify-white); font-size: 24px; margin: 0; flex-grow: 1; text-align: center; }
@@ -639,18 +650,10 @@ function hideCategoryDetailsModal() {
     setTimeout(() => { categoryDetailsModal.style.display = 'none'; }, 300);
 }
 
-
 function abrirDoisLinks() {
-
     const url1 = "https://www.instagram.com/miguelcampos.zz/";
     const url2 = "https://www.instagram.com/caioonofre/";
-
-    
     window.open(url1, '_blank');
-
-   
     window.open(url2, '_blank');
-
     return false;
 }
-
