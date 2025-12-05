@@ -247,6 +247,7 @@ function handleLogin() {
     if (email && password) {
         showNotification('✅ Login realizado com sucesso!', 'success');
         hideLoginModal();
+        return email, password;
     } else {
         showNotification('❌ Por favor, preencha todos os campos.', 'error');
     }
