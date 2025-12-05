@@ -6,23 +6,19 @@ import pool from './db.js';
 
 const app = express();
 const PORT = 3001;
-const JWT_SECRET = 'sua_chave_secreta_super_segura_123'; // ALTERE PARA UMA CHAVE MAIS SEGURA
+const JWT_SECRET = '1234'; 
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Rota de teste
 app.get('/api/test', (req, res) => {
     res.json({ mensagem: '✅ Servidor está funcionando!' });
 });
 
-// ROTA DE REGISTRO
 app.post('/api/registro', async (req, res) => {
     try {
         const { nome, email, senha } = req.body;
 
-        // Validação básica
         if (!nome || !email || !senha) {
             return res.status(400).json({ erro: 'Nome, email e senha são obrigatórios' });
         }
@@ -31,7 +27,6 @@ app.post('/api/registro', async (req, res) => {
             return res.status(400).json({ erro: 'Senha deve ter no mínimo 6 caracteres' });
         }
 
-        // Verificar se email já existe
         const [usuariosExistentes] = await pool.query(
             'SELECT id FROM usuarios WHERE email = ?',
             [email]
@@ -41,16 +36,13 @@ app.post('/api/registro', async (req, res) => {
             return res.status(400).json({ erro: 'Email já cadastrado' });
         }
 
-        // Hash da senha
         const senhaHash = await bcrypt.hash(senha, 10);
 
-        // Inserir usuário no banco
         const [resultado] = await pool.query(
             'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)',
             [nome, email, senhaHash]
         );
 
-        // Gerar token JWT
         const token = jwt.sign(
             { id: resultado.insertId, email },
             JWT_SECRET,
@@ -68,17 +60,14 @@ app.post('/api/registro', async (req, res) => {
     }
 });
 
-// ROTA DE LOGIN
 app.post('/api/login', async (req, res) => {
     try {
         const { email, senha } = req.body;
 
-        // Validação básica
         if (!email || !senha) {
             return res.status(400).json({ erro: 'Email e senha são obrigatórios' });
         }
 
-        // Buscar usuário no banco
         const [usuarios] = await pool.query(
             'SELECT id, nome, email, senha FROM usuarios WHERE email = ?',
             [email]
@@ -90,14 +79,12 @@ app.post('/api/login', async (req, res) => {
 
         const usuario = usuarios[0];
 
-        // Verificar senha
         const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
         if (!senhaValida) {
             return res.status(401).json({ erro: 'Email ou senha incorretos' });
         }
 
-        // Gerar token JWT
         const token = jwt.sign(
             { id: usuario.id, email: usuario.email },
             JWT_SECRET,
@@ -115,7 +102,6 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// ROTA PARA VERIFICAR TOKEN
 app.get('/api/verificar-token', async (req, res) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
@@ -126,7 +112,6 @@ app.get('/api/verificar-token', async (req, res) => {
 
         const decoded = jwt.verify(token, JWT_SECRET);
 
-        // Buscar dados do usuário
         const [usuarios] = await pool.query(
             'SELECT id, nome, email FROM usuarios WHERE id = ?',
             [decoded.id]
@@ -146,12 +131,10 @@ app.get('/api/verificar-token', async (req, res) => {
     }
 });
 
-// ROTA PARA LOGOUT (apenas limpa o token no frontend)
 app.post('/api/logout', (req, res) => {
     res.json({ mensagem: '✅ Logout realizado com sucesso!' });
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
     console.log(`📝 Teste a API em http://localhost:${PORT}/api/test`);
